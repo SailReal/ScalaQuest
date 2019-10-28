@@ -6,10 +6,10 @@ import Matchers._
 
 class PlayerTest extends WordSpec {
 
-  final var name = "Foo"
-  final var points = 25
-  final var correctAnswers = List()
-  final var wrongAnswers = List()
+  final val name = "Foo"
+  final val points = 25
+  final val correctAnswers = List()
+  final val wrongAnswers = List()
 
   final val intest = Player(name, points, correctAnswers, wrongAnswers)
 

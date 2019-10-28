@@ -6,8 +6,8 @@ import Matchers._
 
 class AnswerTest extends WordSpec {
 
-  final var id = 1
-  final var text = "Foo"
+  final val id = 1
+  final val text = "Foo"
 
   final val intest = Answer(id, text)
 
