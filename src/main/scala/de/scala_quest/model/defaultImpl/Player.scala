@@ -1,8 +1,8 @@
-package de.scala_duel.model.defaultImpl
+package de.scala_quest.model.defaultImpl
 
 import java.security.InvalidParameterException
 
-import de.scala_duel.model.{Player => PlayerTrait, Question => QuestionTrait}
+import de.scala_quest.model.{Player => PlayerTrait, Question => QuestionTrait}
 
 case class Player(
   name: String,

@@ -1,4 +1,4 @@
-import de.scala_duel.model.defaultImpl.{Answer, Player, Question}
+import de.scala_quest.model.defaultImpl.{Answer, Player, Question}
 
 val answer = Answer(1, "Foo")
 val question = Question(1, "Foo", 215, List.apply(answer), 1, 21)

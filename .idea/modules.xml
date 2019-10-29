@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaDuel.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaDuel.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaDuel-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaDuel-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" />
     </modules>
   </component>
 </project>

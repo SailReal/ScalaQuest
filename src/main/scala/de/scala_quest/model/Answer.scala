@@ -1,4 +1,4 @@
-package de.scala_duel.model
+package de.scala_quest.model
 
 trait Answer {
   val id: Int

@@ -1,4 +1,4 @@
-package de.scala_duel.model.defaultImpl
+package de.scala_quest.model.defaultImpl
 
 import org.scalatest.WordSpec
 import org.scalatest._
