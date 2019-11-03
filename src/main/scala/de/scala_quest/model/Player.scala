@@ -2,8 +2,9 @@ package de.scala_quest.model
 
 trait Player {
   val name: String
-  var points: Int
-  var correctAnswers: List[Question]
-  var wrongAnswers: List[Question]
+  val points: Int
+  val questions: List[Question]
+  val correctAnswers: List[Question]
+  val wrongAnswers: List[Question]
   def toString: String
 }

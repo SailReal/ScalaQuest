@@ -1,8 +1,8 @@
 import de.scala_quest.model.defaultImpl.{Answer, Player, Question}
 
 val answer = Answer(1, "Foo")
-val question = Question(1, "Foo", 215, List.apply(answer), 1, 21)
-val player = Player("Foo", 23, List.apply(question), List.empty)
+val question = Question(1, "Foo", 215, List(answer), 1, 21)
+val player = Player("Foo", 23, List(question), List.empty)
 
 print("answer")
 answer.id

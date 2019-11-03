@@ -6,9 +6,10 @@ import de.scala_quest.model.{Player => PlayerTrait, Question => QuestionTrait}
 
 case class Player(
   name: String,
-  var points: Int = 0,
-  var correctAnswers: List[QuestionTrait] = List(),
-  var wrongAnswers: List[QuestionTrait] = List()
+  points: Int = 0,
+  questions: List[QuestionTrait] = List(),
+  correctAnswers: List[QuestionTrait] = List(),
+  wrongAnswers: List[QuestionTrait] = List()
 ) extends PlayerTrait {
   if  (name.isEmpty) {
     throw new InvalidParameterException("Player name cannot be empty")
