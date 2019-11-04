@@ -1,8 +1,8 @@
 package de.scala_quest.model
 
-import de.scala_quest.model.defaultImpl.{Player, Question}
-
 trait Game {
   val players: List[Player]
-  val questions: List[Question]
+  def addPlayer(player: Player): Game
+  def removePlayer(player: Player): Game
+  def playerCount(): Int
 }
