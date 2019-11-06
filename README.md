@@ -22,7 +22,7 @@ Dont have sbt? Install sbt for
 [Mac](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html),
 [Windows](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Mac.html),
 [Linux](https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html)
-```bash
+```
 cd in ScalaQuest
 Run sbt. This will open up the sbt console
 Type run
