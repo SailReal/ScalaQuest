@@ -3,13 +3,15 @@ package de.scala_quest.model
 trait Game {
   var players: List[Player]
 
-  /** Adds a player with the given name to the list of players.
+  /** Adds a new player with the given name to the list of players.
    *
-   * @param name the name of the player to be added
+   * @param player the player object to be added
    */
-  def addPlayer(name: String): Unit
+  def addNewPlayer(player: Player): Unit
 
   def removePlayer(player: Player): Game
+
+  def currentPlayer(): Player
 
   /** Returns the number of players currently in the game. */
   def playerCount(): Int

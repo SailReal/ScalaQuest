@@ -19,10 +19,8 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     if (input.ready()) {
       val line = input.readLine()
       if (displayMenu) {
-        println(displayMenu)
         handleMenuInput(line)
       } else if(startGame) {
-        println(startGame)
         handleGameInput(line)
         displayGame()
       }
@@ -37,7 +35,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("Welcome to ScalaQuest")
     logger.info("Choose ...")
     logger.info("[n] Start new game (Single player)")
-    logger.info("[m] Start new game (Multi-player")
+    logger.info("[m] Start new game (Multi-player)")
     logger.info("[q] Quit game")
     logger.info("")
   }
@@ -50,20 +48,19 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     line match {
       case "q" => onQuit()
       case "n" => {
-        controller.newGame()
-        // Get player information from user
-        getPlayerInfo()
+        controller.newGame() // Start new game, create questionList.
+        addPlayerToGame()
       }
-      case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
+      //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
       //case _ => logger.info("Unknown command")
     }
   }
 
-  /** Allows the player to enter his nickname and appoints his/her questions. */
-  def getPlayerInfo(): Unit = {
+  /** Adds a new player to the game. Allows the player to enter his nickname. */
+  def addPlayerToGame(): Unit = {
     logger.info("Enter Nickname")
-    val playerName = input.readLine()
-    controller.createPlayer(playerName)
+    val playerNickname = input.readLine()
+    controller.addNewPlayerToGame(playerNickname)
     displayMenu = false
     startGame = true
     displayGame()
@@ -71,13 +68,14 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
 
   /** Displays the game's current player with his/her question and respective answers. */
   protected def displayGame(): Unit = {
+    val currentPlayer = controller.getCurrentPlayer()
     logger.info("")
-    logger.info("get current playerName")
-    logger.info("get current player's Question x: ")
-    logger.info("get answers to the above question")
-    logger.info("Answer 2")
-    logger.info("Answer 3")
-    logger.info("Answer 4")
+    logger.info(currentPlayer.name)
+    val question = currentPlayer.getNextQuestion()
+    logger.info("Question: " + question.text )
+    question.answers.zipWithIndex.foreach {
+      case (answer, i) => logger.info((i + 1) + ") " + answer.text)
+    }
     logger.info("[q] Quit game")
     logger.info("")
   }
@@ -88,10 +86,10 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
    */
   protected def handleGameInput(line: String): Unit = {
     line match {
-      case "1" => logger.info("selected answer 1")
-      case "2" => logger.info("selected answer 2")
-      case "3" => logger.info("selected answer 3")
-      case "4" => logger.info("selected answer 4")
+      case "1" => controller.processAnswer(1)
+      case "2" => controller.processAnswer(2)
+      case "3" => controller.processAnswer(3)
+      case "4" => controller.processAnswer(4)
       case "q" => onQuit()
       case _ => logger.info("Not a valid command")
     }
