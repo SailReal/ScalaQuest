@@ -2,11 +2,12 @@ package de.scala_quest.model
 
 trait Player {
   val name: String
-  val points: Int
-  val questionIndex: Int
-  val questions: List[Question]
-  val correctAnswers: List[Question]
-  val wrongAnswers: List[Question]
+  var points: Int
+  var questionIndex: Int
+  var questions: List[Question]
+  var correctAnswers: List[Question]
+  var wrongAnswers: List[Question]
+  var currentQuestion: Question
 
   /**
    *
@@ -19,4 +20,6 @@ trait Player {
    * @return
    */
   def toString: String
+
+
 }

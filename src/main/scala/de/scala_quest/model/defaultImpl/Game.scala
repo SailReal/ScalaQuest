@@ -9,8 +9,6 @@ case class Game (
   override def addNewPlayer(newPlayer: PlayerTrait): Unit = {
     // addPlayer parameter = name: String
     // create questionList for player
-    val answer = Answer(1, "Bar")
-    val question = Question(1, "After Foo comes?", 215, List(answer), 1, 21)
     players = players :+ newPlayer
   }
 

@@ -40,6 +40,23 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("")
   }
 
+  def displayMultiPlayerMenu(): Unit = {
+    logger.info("[a] Add player")
+    logger.info("[r] Remove player")
+  }
+
+  def multiplayerMenu(): Unit = {
+    logger.info("")
+    logger.info("Multi-player mode")
+    //displayMultiPlayerMenu()
+    logger.info("Enter a comma separated list of names, (e.g. Foo, Bar, Baz)")
+    val playerNames = input.readLine()
+    logger.info("Welcome")
+    var names = ""
+    playerNames.split(", ").foreach(n => names = names.concat(n + " "))
+    logger.info(names)
+  }
+
   /** Handles the keyboard input in relation to the main menu options.
    *
    * @param line the text the user entered via the command line
@@ -50,6 +67,10 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case "n" => {
         controller.newGame() // Start new game, create questionList.
         addPlayerToGame()
+      }
+      case "m" => {
+        controller.newGame()
+        multiplayerMenu()
       }
       //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
       //case _ => logger.info("Unknown command")
@@ -68,16 +89,30 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
 
   /** Displays the game's current player with his/her question and respective answers. */
   protected def displayGame(): Unit = {
-    val currentPlayer = controller.getCurrentPlayer()
+    val currentPlayer = controller.getCurrentPlayersName()
     logger.info("")
-    logger.info(currentPlayer.name)
-    val question = currentPlayer.getNextQuestion()
-    logger.info("Question: " + question.text )
-    question.answers.zipWithIndex.foreach {
-      case (answer, i) => logger.info((i + 1) + ") " + answer.text)
+    logger.info(currentPlayer)
+    val question = controller.getPlayersCurrentQuestion()
+    question match {
+      case Some(q) => logger.info("Question: " + q)
+      case None => {
+        logger.info(s"Player '$currentPlayer' has no more questions left...")
+        displayGameResults()
+      }
+    }
+    controller.getPlayersCurrentAnswers.zipWithIndex.foreach {
+      case (answer, i) => logger.info((i + 1) + ") " + answer)
     }
     logger.info("[q] Quit game")
     logger.info("")
+  }
+
+  protected def displayGameResults(): Unit = {
+    println("")
+    logger.info("")
+    logger.info("Game results")
+    logger.info("")
+    onQuit()
   }
 
   /** Handles the keyboard input in relation to the game menu options.

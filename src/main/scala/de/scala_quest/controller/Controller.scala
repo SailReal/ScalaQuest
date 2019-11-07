@@ -1,6 +1,6 @@
 package de.scala_quest.controller
 
-import de.scala_quest.model.Player
+import de.scala_quest.model.{Player, Question}
 
 trait Controller {
 
@@ -22,11 +22,17 @@ trait Controller {
    */
   def getPlayerList(): List[String]
 
-  /** Returns the current player whose turn it is.
+  /** Returns the name of the current player whose turn it is.
    *
-   * @return the player whose turn it is
+   * @return the player's name
    */
+  def getCurrentPlayersName(): String
+
   def getCurrentPlayer(): Player
+
+  def getPlayersCurrentQuestion(): Option[String]
+
+  def getPlayersCurrentAnswers(): List[String]
 
   /** Processes the keyboard input received from the user while answering a question.
    *

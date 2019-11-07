@@ -7,11 +7,12 @@ import de.scala_quest.model.{Player => PlayerTrait, Question => QuestionTrait}
 
 case class Player(
   name: String,
-  points: Int = 0,
-  questionIndex: Int = 0,
-  questions: List[QuestionTrait] = List(),
-  correctAnswers: List[QuestionTrait] = List(),
-  wrongAnswers: List[QuestionTrait] = List()
+  var points: Int = 0,
+  var questionIndex: Int = 0,
+  var questions: List[QuestionTrait] = List(),
+  var correctAnswers: List[QuestionTrait] = List(),
+  var wrongAnswers: List[QuestionTrait] = List(),
+  var currentQuestion: QuestionTrait = null
 ) extends PlayerTrait {
 
   if  (name.isEmpty) {
@@ -19,8 +20,12 @@ case class Player(
   }
 
   override def getNextQuestion(): QuestionTrait = {
-    //val question: String = questions(0).text
-    questions.lift(0).get
+    if (questionIndex < questions.length) {
+      Some(questions.lift(questionIndex).get)
+    } else {
+      println("NO MORE QUESTIONS LEFT")
+    }
+    questions.lift(questionIndex).get
   }
 
   override def toString: String = name
