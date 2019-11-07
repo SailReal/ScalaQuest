@@ -11,6 +11,7 @@ case class Player(
   correctAnswers: List[QuestionTrait] = List(),
   wrongAnswers: List[QuestionTrait] = List()
 ) extends PlayerTrait {
+
   if  (name.isEmpty) {
     throw new InvalidParameterException("Player name cannot be empty")
   }

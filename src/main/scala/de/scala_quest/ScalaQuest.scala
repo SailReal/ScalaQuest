@@ -1,11 +1,15 @@
 package de.scala_quest
 
-import de.scala_quest.controller.defaultImpl.Controller
+import de.scala_quest.controller.Controller
+import com.google.inject.Guice
 import de.scala_quest.view.Tui
 
 object ScalaQuest {
   def main(args: Array[String]): Unit = {
-    // TODO use GUICE to bind Controller and Tui to Impl
-    new Tui(new Controller)
+    println("Starting ScalaQuest...")
+    // Create injector instance
+    val injector = Guice.createInjector(new ScalaQuestModule())
+    val controller = injector.getInstance(classOf[Controller])
+    new Tui(controller)
   }
 }

@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />
     </modules>
   </component>
 </project>

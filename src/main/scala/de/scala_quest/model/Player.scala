@@ -6,5 +6,6 @@ trait Player {
   val questions: List[Question]
   val correctAnswers: List[Question]
   val wrongAnswers: List[Question]
+
   def toString: String
 }
