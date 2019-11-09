@@ -6,10 +6,10 @@ import de.scala_quest.view.Tui
 
 object ScalaQuest {
   def main(args: Array[String]): Unit = {
-    println("Starting ScalaQuest...")
     // Create injector instance
     val injector = Guice.createInjector(new ScalaQuestModule())
     val controller = injector.getInstance(classOf[Controller])
+
     new Tui(controller)
   }
 }

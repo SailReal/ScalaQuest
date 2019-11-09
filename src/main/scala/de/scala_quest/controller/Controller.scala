@@ -25,27 +25,35 @@ trait Controller {
    */
   def getPlayerNames(): List[String]
 
-  /** Returns the name of the current player whose turn it is.
-   *
-   * @return the player's name
-   */
-  def getCurrentPlayersName(): String
-
   /** Returns a tuple
    *
    * @return
    */
-  def getPlayerInfo(): (String, String, String)
+  def getPlayerInfo(): (String, String)
 
-  def getCurrentPlayer(): Player
-
+  /** Returns the players current question.
+   *
+   * @return the question to be asked
+   */
   def getPlayersCurrentQuestion(): Option[String]
 
+  /** Returns the players current question answers.
+   *
+   * @return the answers to the current question
+   */
   def getPlayersCurrentAnswers(): List[String]
 
+  /** Gets the current game's round number.
+   *
+   * @return the current round number
+   */
   def getRoundNr(): Int
 
-  def getGameResults(): String
+  /** Returns a list of all players.
+   *
+   * @return the list of players
+   */
+  def getPlayers(): List[Player]
 
   /** Processes the keyboard input received from the user while answering a question.
    *

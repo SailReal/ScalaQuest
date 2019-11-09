@@ -1,10 +1,8 @@
 package de.scala_quest.view
 
 import java.io.BufferedReader
-
 import com.typesafe.scalalogging.LazyLogging
 import de.scala_quest.controller.Controller
-import de.scala_quest.view.Ui
 
 class Tui (controller: Controller) extends Ui with LazyLogging {
   // controller.addObserver(this)
@@ -14,7 +12,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   var displayMenu = true
   var singlePlayerMode = false
   var multiPlayerMode = false
-  var nrOfRoundsWishedToPlay = 3
+  var nrOfRoundsWishedToPlay = 1
 
   displayMainMenu()
 
@@ -37,26 +35,35 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("")
     logger.info("Welcome to ScalaQuest")
     logger.info("Choose ...")
-    logger.info("[n] Start new game (Single player)")
-    logger.info("[m] Start new game (Multi-player)")
+    logger.info("[n] Start new game")
     logger.info("[q] Quit game")
     logger.info("")
   }
 
-  def displayMultiPlayerMenu(): Unit = {
-    logger.info("[a] Add player")
-    logger.info("[r] Remove player")
+  /** Handles the keyboard input in relation to the main menu options.
+   *
+   * @param line the text the user entered via the command line
+   */
+  protected def handleMenuInput(line: String): Unit = {
+    line match {
+      case "q" => onQuit()
+      case "n" => {
+        controller.newGame()
+        displayNewGameMenu()
+      }
+      //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
+      //case _ => logger.info("Unknown command")
+    }
   }
 
-  def multiplayerMenu(): Unit = {
+  /** Displays the new game menu where players are allowed to enter their names. */
+  def displayNewGameMenu(): Unit = {
     logger.info("")
-    logger.info("Multi-player mode")
-    //displayMultiPlayerMenu()
-    logger.info("Enter a comma separated list of names. (For example: Foo, Bar, Baz)")
+    logger.info("Enter player name(s), a comma or whitespace separated list. (For example: Foo, Bar, Baz)")
     val playerNames = input.readLine()
     logger.info("Welcome")
     // add each player to the game
-    playerNames.split(", ").foreach(name => controller.addNewPlayerToGame(name))
+    playerNames.split("\\s*(\\s|,)\\s*").foreach(name => controller.addNewPlayerToGame(name))
     displayPlayers()
     println("")
     displayMenu = false
@@ -70,53 +77,29 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("Players: " + controller.getPlayerNames().mkString(", "))
   }
 
-  /** Handles the keyboard input in relation to the main menu options.
-   *
-   * @param line the text the user entered via the command line
-   */
-  protected def handleMenuInput(line: String): Unit = {
-    line match {
-      case "q" => onQuit()
-      case "n" => {
-        controller.newGame() // Start new game, create questionList.
-        addPlayerToGame()
-      }
-      case "m" => {
-        controller.newGame()
-        multiplayerMenu()
-      }
-      //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
-      //case _ => logger.info("Unknown command")
-    }
-  }
-
-  /** Adds a new player to the game. Allows the player to enter his nickname. */
-  def addPlayerToGame(): Unit = {
-    logger.info("Enter Nickname")
-    val playerNickname = input.readLine()
-    controller.addNewPlayerToGame(playerNickname)
-    displayMenu = false
-    startGame = true
-    controller.startGame()
-    displayGame()
-  }
-
   /** Displays the game's current player with his/her question and respective answers. */
   protected def displayGame(): Unit = {
     val currentRound = controller.getRoundNr()
     if(currentRound <= nrOfRoundsWishedToPlay) {
-      logger.info(s"currentRound: $currentRound")
-      val (name, points, questionIndex) = controller.getPlayerInfo()
+      if (currentRound == nrOfRoundsWishedToPlay) {
+        logger.info("Final Round!!!")
+      } else {
+        logger.info(s"Round: $currentRound")
+      }
+      val (name, points) = controller.getPlayerInfo()
       logger.info(s"$name ($points pts)")
+      // FIXME: Doesnt need to be an Option anymore since roundNr is fixed.
       val question = controller.getPlayersCurrentQuestion()
       question match {
         case Some(q) => {
           val questionLength = q.size
           var separator = ""
-          (1 to (questionLength + 10)).foreach(l => separator = separator + "-")
+          // +10 includes "Question:".length + \\s
+          (1 to (questionLength + 10)).foreach(l => separator += "-")
           logger.info(separator)
           logger.info("Question: " + q)
         }
+          // FIXME: could omit this
         case None => {
           logger.info(s"Player '$name' has no more questions left...")
           displayGameResults()
@@ -128,18 +111,43 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       logger.info("[q] Quit game")
       logger.info("")
     } else {
-      logger.info("NO MORE ROUNDS LEFT!! PRINT RESULTS")
+      logger.info("That was the final round, calculating results.")
+      Thread.sleep(1250) // Create suspense :)
       displayGameResults()
     }
   }
 
+  /** Displays the game's results. These results include the player names
+   * with their respective points, correctly answered and wrongly answered
+   * questions as well as the overall winner.
+   */
   protected def displayGameResults(): Unit = {
+    val players = controller.getPlayers()
     println("")
     logger.info("")
     logger.info("GAME RESULTS")
     logger.info("")
-    logger.info(controller.getGameResults())
-    onQuit()
+    players.map(p => {
+      logger.info(s"Name: ${p.name} -> ${p.points} pts")
+      logger.info(s"Correctly answered questions: ${p.correctAnswers.size}")
+      p.correctAnswers.map(q => {
+        logger.info(s"    * ${q.text}")
+      })
+      logger.info(s"Wrongly answered questions: ${p.wrongAnswers.size}")
+      p.wrongAnswers.foreach(q => {
+        logger.info(s"  * ${q.text}. (correct ans: ${q.answers.find(a => a.id == q.correctAnswer).get.text})")
+      })
+      logger.info("")
+    })
+    // FIXME: get winner(s)
+    val max1 = players.maxBy(_.points)
+    println("max1: " + max1)
+    logger.info(s"Winner: $max1")
+
+    logger.info("")
+    displayMenu = true
+    startGame = false
+    displayMainMenu()
   }
 
   /** Handles the keyboard input in relation to the game menu options.
@@ -155,7 +163,6 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case "q" => onQuit()
       case _ => logger.info("Not a valid command")
     }
-    println("AFTER ANSWERING QUESTION")
   }
 
   /** Ensures for a clean application exit. */
@@ -165,6 +172,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     startGame = false
     logger.info("Exiting Application")
     controller.onQuit()
+    sys.exit(0) // FIXME
   }
 
 }
