@@ -29,6 +29,16 @@ case class Player(
   }
 
   override def toString: String = name
+
+  override def resultString: String = {
+    val retVal = new StringBuilder
+    retVal ++= s"Name: $name\n"
+    retVal ++= s"Points: $points\n"
+    retVal ++= s"Correctly answered questions: " + correctAnswers.size + "\n"
+    retVal ++= s"Wrongly answered questions: " + wrongAnswers.size + "\n"
+
+    retVal.toString()
+  }
 }
 
 

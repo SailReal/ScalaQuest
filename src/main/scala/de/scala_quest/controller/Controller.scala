@@ -7,6 +7,9 @@ trait Controller {
   /** Starts a new game. */
   def newGame()
 
+  /** Initializes the game. */
+  def startGame()
+
   /** Quits the game. */
   def onQuit()
 
@@ -16,11 +19,11 @@ trait Controller {
    */
   def addNewPlayerToGame(name: String)
 
-  /** Returns a list of all players.
+  /** Returns a list containing all player names.
    *
-   * @return a list containing a string representation of the players
+   * @return a list containing a string representation of the player's names
    */
-  def getPlayerList(): List[String]
+  def getPlayerNames(): List[String]
 
   /** Returns the name of the current player whose turn it is.
    *
@@ -28,11 +31,21 @@ trait Controller {
    */
   def getCurrentPlayersName(): String
 
+  /** Returns a tuple
+   *
+   * @return
+   */
+  def getPlayerInfo(): (String, String, String)
+
   def getCurrentPlayer(): Player
 
   def getPlayersCurrentQuestion(): Option[String]
 
   def getPlayersCurrentAnswers(): List[String]
+
+  def getRoundNr(): Int
+
+  def getGameResults(): String
 
   /** Processes the keyboard input received from the user while answering a question.
    *

@@ -22,6 +22,13 @@ class Controller @Inject()(game: Game) extends ControllerTrait {
     // assign question list to game.QnA
   }
 
+  override def startGame(): Unit = {
+    // TODO pack into method game.setInitialState
+    game.currentPlayer = game.players.lift(0).get
+    game.maxRoundNr = 3
+    game.currentRoundNr = 1
+  }
+
   override def addNewPlayerToGame(name: String): Unit = {
     // Create player and add to game.
     val ans1 = List(Answer(1, "True"), Answer(2, "False"))
@@ -40,28 +47,32 @@ class Controller @Inject()(game: Game) extends ControllerTrait {
   }
 
   override def getCurrentPlayersName(): String = {
-    game.currentPlayer().name
+    game.currentPlayer.name
+  }
+
+  override def getPlayerInfo() : (String, String, String) = {
+    (game.currentPlayer.name, game.currentPlayer.points.toString, game.currentPlayer.questionIndex.toString)
   }
 
   override def getCurrentPlayer(): PlayerTrait = {
-    game.currentPlayer()
+    game.currentPlayer
   }
 
-  override def getPlayerList(): List[String] = {
+  override def getPlayerNames(): List[String] = {
     game.players.map(player => player.name)
   }
 
   override def getPlayersCurrentQuestion(): Option[String] = {
-    if (game.currentPlayer().questionIndex >= game.currentPlayer().questions.length) {
+    if (game.currentPlayer.questionIndex >= game.currentPlayer.questions.length) {
       None
     } else {
-      game.currentPlayer().currentQuestion = game.currentPlayer().questions.lift(game.currentPlayer().questionIndex).get
-      Some(game.currentPlayer().currentQuestion.text)
+      game.currentPlayer.currentQuestion = game.currentPlayer.questions.lift(game.currentPlayer.questionIndex).get
+      Some(game.currentPlayer.currentQuestion.text)
     }
   }
 
   override def getPlayersCurrentAnswers(): List[String] = {
-    game.currentPlayer().currentQuestion.answers.map(a => a.text)
+    game.currentPlayer.currentQuestion.answers.map(a => a.text)
   }
 
   /**
@@ -89,5 +100,15 @@ class Controller @Inject()(game: Game) extends ControllerTrait {
 
     // Update player's current question
     player.questionIndex += 1
+    // update the game's state
+    game.updateState()
+  }
+
+  override def getGameResults(): String = {
+    game.results()
+  }
+
+  override def getRoundNr(): Int = {
+    game.currentRoundNr
   }
 }

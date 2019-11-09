@@ -21,5 +21,7 @@ trait Player {
    */
   def toString: String
 
+  def resultString: String
+
 
 }

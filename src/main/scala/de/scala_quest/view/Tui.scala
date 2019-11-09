@@ -12,6 +12,9 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   var quit = false
   var startGame = false
   var displayMenu = true
+  var singlePlayerMode = false
+  var multiPlayerMode = false
+  var nrOfRoundsWishedToPlay = 3
 
   displayMainMenu()
 
@@ -49,12 +52,22 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("")
     logger.info("Multi-player mode")
     //displayMultiPlayerMenu()
-    logger.info("Enter a comma separated list of names, (e.g. Foo, Bar, Baz)")
+    logger.info("Enter a comma separated list of names. (For example: Foo, Bar, Baz)")
     val playerNames = input.readLine()
     logger.info("Welcome")
-    var names = ""
-    playerNames.split(", ").foreach(n => names = names.concat(n + " "))
-    logger.info(names)
+    // add each player to the game
+    playerNames.split(", ").foreach(name => controller.addNewPlayerToGame(name))
+    displayPlayers()
+    println("")
+    displayMenu = false
+    startGame = true
+    controller.startGame()
+    displayGame()
+  }
+
+  /** Displays the names of the current players within the game. */
+  def displayPlayers(): Unit = {
+    logger.info("Players: " + controller.getPlayerNames().mkString(", "))
   }
 
   /** Handles the keyboard input in relation to the main menu options.
@@ -84,34 +97,48 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     controller.addNewPlayerToGame(playerNickname)
     displayMenu = false
     startGame = true
+    controller.startGame()
     displayGame()
   }
 
   /** Displays the game's current player with his/her question and respective answers. */
   protected def displayGame(): Unit = {
-    val currentPlayer = controller.getCurrentPlayersName()
-    logger.info("")
-    logger.info(currentPlayer)
-    val question = controller.getPlayersCurrentQuestion()
-    question match {
-      case Some(q) => logger.info("Question: " + q)
-      case None => {
-        logger.info(s"Player '$currentPlayer' has no more questions left...")
-        displayGameResults()
+    val currentRound = controller.getRoundNr()
+    if(currentRound <= nrOfRoundsWishedToPlay) {
+      logger.info(s"currentRound: $currentRound")
+      val (name, points, questionIndex) = controller.getPlayerInfo()
+      logger.info(s"$name ($points pts)")
+      val question = controller.getPlayersCurrentQuestion()
+      question match {
+        case Some(q) => {
+          val questionLength = q.size
+          var separator = ""
+          (1 to (questionLength + 10)).foreach(l => separator = separator + "-")
+          logger.info(separator)
+          logger.info("Question: " + q)
+        }
+        case None => {
+          logger.info(s"Player '$name' has no more questions left...")
+          displayGameResults()
+        }
       }
+      controller.getPlayersCurrentAnswers.zipWithIndex.foreach {
+        case (answer, i) => logger.info((i + 1) + ") " + answer)
+      }
+      logger.info("[q] Quit game")
+      logger.info("")
+    } else {
+      logger.info("NO MORE ROUNDS LEFT!! PRINT RESULTS")
+      displayGameResults()
     }
-    controller.getPlayersCurrentAnswers.zipWithIndex.foreach {
-      case (answer, i) => logger.info((i + 1) + ") " + answer)
-    }
-    logger.info("[q] Quit game")
-    logger.info("")
   }
 
   protected def displayGameResults(): Unit = {
     println("")
     logger.info("")
-    logger.info("Game results")
+    logger.info("GAME RESULTS")
     logger.info("")
+    logger.info(controller.getGameResults())
     onQuit()
   }
 
@@ -128,6 +155,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case "q" => onQuit()
       case _ => logger.info("Not a valid command")
     }
+    println("AFTER ANSWERING QUESTION")
   }
 
   /** Ensures for a clean application exit. */
