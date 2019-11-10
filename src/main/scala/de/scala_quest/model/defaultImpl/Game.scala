@@ -4,9 +4,10 @@ import de.scala_quest.model.{Game => GameTrait, Player => PlayerTrait}
 
 case class Game (
   var players: List[PlayerTrait] = List(),
+  var currentPlayer:PlayerTrait = null,
   var currentPlayerIndex: Int = 0,
-  var maxRoundNumber: Int = 0,
-  var currentRoundNumber: Int = 0,
+  var maxRoundNr: Int = 0,
+  var currentRoundNr: Int = 0,
   var questionList: List[Question] = List(),
 ) extends GameTrait {
 
@@ -31,10 +32,10 @@ case class Game (
       currentRoundNr += 1
       currentPlayer = players.lift(currentPlayerIndex).get
     }
-
   }
 
   override def createQuestionList(): Unit = {
+    // TODO: read questions from JSON file
     val ans1 = List(Answer(1, "True"), Answer(2, "False"))
     val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1, 10)
 
@@ -47,7 +48,4 @@ case class Game (
     questionList = List(question1, question2, question3)
   }
 
-  override var currentPlayer: PlayerTrait = null
-  override var maxRoundNr: Int = 0
-  override var currentRoundNr: Int = 0
 }
