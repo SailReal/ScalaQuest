@@ -61,13 +61,15 @@ class Controller @Inject()(game: Game) extends ControllerTrait {
     game.currentPlayer.currentQuestion.answers.map(a => a.text)
   }
 
+  override def getPlayerCount(): Int = game.playerCount()
+
   /**
    * NB: Only used by the TUI. The GUI will need a different mechanism to process Answers.
    * @param input
    */
   def processAnswer(input: Int): Unit = {
     var player = getCurrentPlayer()
-    var currentQuestion = player.getNextQuestion()
+    var currentQuestion = player.questions.lift(player.questionIndex).get
     var correctAnswer = currentQuestion.correctAnswer
 
     if(input == correctAnswer) { // increase players points and add question to correct answers

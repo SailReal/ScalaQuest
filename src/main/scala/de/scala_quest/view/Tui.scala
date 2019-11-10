@@ -12,7 +12,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   var displayMenu = true
   var singlePlayerMode = false
   var multiPlayerMode = false
-  var nrOfRoundsWishedToPlay = 1
+  var nrOfRoundsWishedToPlay = 3
 
   displayMainMenu()
 
@@ -34,7 +34,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   def displayMainMenu(): Unit = {
     logger.info("")
     logger.info("Welcome to ScalaQuest")
-    logger.info("Choose ...")
+    logger.info("Choose and confirm entry with Enter...")
     logger.info("[n] Start new game")
     logger.info("[q] Quit game")
     logger.info("")
@@ -52,7 +52,10 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
         displayNewGameMenu()
       }
       //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
-      //case _ => logger.info("Unknown command")
+      case _ => {
+        logger.info("Unknown command, select either 'n' or 'q'")
+        displayMainMenu()
+      }
     }
   }
 
@@ -139,15 +142,28 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       })
       logger.info("")
     })
-    // FIXME: get winner(s)
-    val max1 = players.maxBy(_.points)
-    println("max1: " + max1)
-    logger.info(s"Winner: $max1")
 
+    if (controller.getPlayerCount() > 1) {
+      // Derive winner(s)
+      val sortedAscList = players.sortBy(_.points)
+      var winner: String = sortedAscList.last.name
+      val highestScore = sortedAscList.last.points
+      // Check if any other player has same high score
+      sortedAscList.dropRight(1).foreach(p => {
+        if (p.points == highestScore) {
+          winner += s", ${p.name}"
+        }
+      })
+      logger.info(s"Winner(s): $winner")
+      logger.info("")
+    }
+
+    onQuit()
+    /*
     logger.info("")
     displayMenu = true
     startGame = false
-    displayMainMenu()
+    displayMainMenu()*/
   }
 
   /** Handles the keyboard input in relation to the game menu options.

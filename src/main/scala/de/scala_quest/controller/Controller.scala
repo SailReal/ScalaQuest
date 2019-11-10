@@ -55,6 +55,9 @@ trait Controller {
    */
   def getPlayers(): List[Player]
 
+  /** Gets the number of players within the game. */
+  def getPlayerCount(): Int
+
   /** Processes the keyboard input received from the user while answering a question.
    *
    * @param input a numerical representation of the keyboard input corresponding to the selected answer

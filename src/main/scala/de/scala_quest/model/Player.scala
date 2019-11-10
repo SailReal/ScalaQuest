@@ -16,18 +16,10 @@ trait Player {
   /** The player's current question. */
   var currentQuestion: Question
 
-  /**
+  /** Returns the name of the player.
    *
-   * @return
-   */
-  def getNextQuestion(): Question
-
-  /**
-   *
-   * @return
+   * @return the player's name
    */
   def toString: String
-
-  def resultString: String
 
 }

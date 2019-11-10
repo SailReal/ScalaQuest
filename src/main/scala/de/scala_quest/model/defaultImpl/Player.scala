@@ -19,26 +19,6 @@ case class Player(
     throw new InvalidParameterException("Player name cannot be empty")
   }
 
-  override def getNextQuestion(): QuestionTrait = {
-    if (questionIndex < questions.length) {
-      Some(questions.lift(questionIndex).get)
-    } else {
-      println("NO MORE QUESTIONS LEFT")
-    }
-    questions.lift(questionIndex).get
-  }
-
   override def toString: String = name
 
-  override def resultString: String = {
-    val retVal = new StringBuilder
-    retVal ++= s"Name: $name\n"
-    retVal ++= s"Points: $points\n"
-    retVal ++= s"Correctly answered questions: " + correctAnswers.size + "\n"
-    retVal ++= s"Wrongly answered questions: " + wrongAnswers.size + "\n"
-
-    retVal.toString()
-  }
 }
-
-
