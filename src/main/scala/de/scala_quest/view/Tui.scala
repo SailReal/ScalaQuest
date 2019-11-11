@@ -1,7 +1,9 @@
 package de.scala_quest.view
 
 import java.io.BufferedReader
+
 import com.typesafe.scalalogging.LazyLogging
+import de.scala_quest.GameState
 import de.scala_quest.controller.Controller
 
 class Tui (controller: Controller) extends Ui with LazyLogging {
@@ -191,4 +193,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     sys.exit(0) // FIXME
   }
 
+  override def update(updateData: GameState): Unit = {
+
+  }
 }

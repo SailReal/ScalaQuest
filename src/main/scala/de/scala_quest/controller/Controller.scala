@@ -1,8 +1,9 @@
 package de.scala_quest.controller
 
-import de.scala_quest.model.{Player, Question}
+import de.scala_quest.Observable
+import de.scala_quest.model.{Game, Player, Question}
 
-trait Controller {
+trait Controller extends Observable {
 
   /** Starts a new game. */
   def newGame()

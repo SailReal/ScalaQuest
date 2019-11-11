@@ -1,90 +1,85 @@
 package de.scala_quest.controller.defaultImpl
 
+import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.{Controller => ControllerTrait}
-import de.scala_quest.model.Game
-import com.google.inject.Inject
 import de.scala_quest.model.{Player => PlayerTrait}
-import de.scala_quest.model.defaultImpl.{Answer, Player, Question}
+import de.scala_quest.model.defaultImpl.Player
+
 import scala.util.Random
 
-/**
- *
- * @param game
- */
-class Controller @Inject()(game: Game) extends ControllerTrait {
+case class Controller(var gameState: GameState) extends ControllerTrait {
 
   override def onQuit(): Unit = {
-    // notify observers
+    notifyObservers(GameState(UpdateAction.CLOSE_APPLICATION, gameState.game))
   }
 
-  override def newGame() : Unit = {
+  override def newGame(): Unit = {
     // notify observers
     // set game status to newGame
-    game.createQuestionList()
+    gameState = GameState(UpdateAction.BEGIN, gameState.game.createQuestionList) // TODO delete
+    notifyObservers(gameState)
   }
 
   override def startGame(): Unit = {
-    // TODO pack into method game.setInitialState
-    game.currentPlayer = game.players.lift(0).get
-    game.maxRoundNr = 3
-    game.currentRoundNr = 1
+    gameState = GameState(UpdateAction.BEGIN, gameState.game.start) // TODO delete
+    notifyObservers(gameState)
   }
 
   override def addNewPlayerToGame(name: String): Unit = {
-    val questionList = game.questionList
+    val questionList = gameState.game.questionList
 
     // shuffle the questionList for each new player
-    val newPlayer = Player(name, 0, 0, Random.shuffle(questionList), List(), List(), null)
-    newPlayer.currentQuestion = newPlayer.questions(0).asInstanceOf[Question] //r
-    game.addNewPlayer(newPlayer)
-    // notify observers new player
+    val newPlayer = Player(name, 0, 0, Random.shuffle(questionList), List(), List(), Option.empty)
+
+    gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer)) // TODO delete
+
+    notifyObservers(gameState)
   }
 
   override def getPlayerInfo() : (String, String) = {
-    (game.currentPlayer.name, game.currentPlayer.points.toString)
+    (gameState.game.currentPlayer.get.name, gameState.game.currentPlayer.get.points.toString)
   }
 
-  def getCurrentPlayer(): PlayerTrait = game.currentPlayer
+  def getCurrentPlayer(): Option[PlayerTrait] = gameState.game.currentPlayer
 
-  override def getPlayerNames(): List[String] = game.players.map(player => player.name)
+  override def getPlayerNames(): List[String] = gameState.game.players.map(player => player.name)
 
   override def getPlayersCurrentQuestion(): Option[String] = {
-    if (game.currentPlayer.questionIndex >= game.currentPlayer.questions.length) {
+    if (gameState.game.currentPlayer.get.questionIndex >= gameState.game.currentPlayer.get.questions.length) {
       None
     } else {
-      game.currentPlayer.currentQuestion = game.currentPlayer.questions.lift(game.currentPlayer.questionIndex).get
-      Some(game.currentPlayer.currentQuestion.text)
+      val game = gameState.game.nextQuestion(gameState.game.currentPlayer.get)
+      gameState = GameState(UpdateAction.SHOW_GAME, game)
+      Some(gameState.game.currentPlayer.get.currentQuestion.get.text)
     }
   }
 
   override def getPlayersCurrentAnswers(): List[String] = {
-    game.currentPlayer.currentQuestion.answers.map(a => a.text)
+    // TODO remove gets
+    gameState.game.currentPlayer.get.currentQuestion.get.answers.map(a => a.text)
   }
 
-  override def getPlayerCount(): Int = game.playerCount()
+  override def getPlayerCount(): Int = gameState.game.playerCount()
 
   /**
    * NB: Only used by the TUI. The GUI will need a different mechanism to process Answers.
    * @param input
    */
   def processAnswer(input: Int): Unit = {
-    var player = getCurrentPlayer()
-    var currentQuestion = player.questions.lift(player.questionIndex).get
-    var correctAnswer = currentQuestion.correctAnswer
+    val player = getCurrentPlayer()
+    val currentQuestion = player.get.questions.lift(player.get.questionIndex).get
+    val correctAnswer = currentQuestion.correctAnswer
 
-    if(input == correctAnswer) { // increase players points and add question to correct answers
-      player.points += currentQuestion.points
-      player.correctAnswers = player.correctAnswers :+ currentQuestion
+    val updatedPlayer = if(input == correctAnswer) {
+      player.get.correctAnswer(currentQuestion)
     } else {
-      player.wrongAnswers = player.wrongAnswers :+ currentQuestion
+      player.get.wrongAnswer(currentQuestion)
     }
-
-    // Update player's current question
-    player.questionIndex += 1
-    // update the game's state
-    game.updateState()
+    val game = gameState.game.updatePlayer(updatedPlayer).updateState()
+    gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
+    notifyObservers(gameState)
   }
 
-  override def getPlayers(): List[PlayerTrait] = game.players
-  override def getRoundNr(): Int = game.currentRoundNr
+  override def getPlayers(): List[PlayerTrait] = gameState.game.players
+  override def getRoundNr(): Int = gameState.game.currentRoundNr
 }

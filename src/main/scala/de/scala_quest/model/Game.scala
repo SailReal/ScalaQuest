@@ -1,26 +1,24 @@
 package de.scala_quest.model
 
-import de.scala_quest.model.defaultImpl.Question
-
 trait Game {
   /** A list of players currently in the game. */
-  var players: List[Player]
+  val players: List[Player]
   /** The player whose turn it currently is. */
-  var currentPlayer: Player
+  val currentPlayer: Option[Player]
   /** The index of the current player within the list. */
-  var currentPlayerIndex: Int
+  val currentPlayerIndex: Int
   /** The maximum number of rounds to play. */
-  var maxRoundNr: Int
+  val maxRoundNr: Int
   /** The current round. */
-  var currentRoundNr: Int
+  val currentRoundNr: Int
   /** A list of questions available in the game. */
-  var questionList: List[Question]
+  val questionList: List[Question]
 
   /** Adds a new player to the list of players.
    *
    * @param player the player object to be added
    */
-  def addNewPlayer(player: Player): Unit
+  def addNewPlayer(player: Player): Game
 
   /** Removes a player from the game.
    *
@@ -30,11 +28,18 @@ trait Game {
   def removePlayer(player: Player): Game
 
   /** Updates the game's state. */
-  def updateState(): Unit
+  def updateState(): Game
 
   /** Returns the number of players currently in the game. */
   def playerCount(): Int
 
   /** Creates the question list upon new game. */
-  def createQuestionList(): Unit
+  def createQuestionList: Game
+
+  def start: Game
+
+  def updatePlayer(player: Player): Game
+
+  def nextQuestion(player: Player): Game
+
 }

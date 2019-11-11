@@ -10,6 +10,6 @@ object ScalaQuest {
     val injector = Guice.createInjector(new ScalaQuestModule())
     val controller = injector.getInstance(classOf[Controller])
 
-    new Tui(controller)
+    val tui = new Tui(controller)
   }
 }

@@ -1,40 +1,51 @@
 package de.scala_quest.model.defaultImpl
 
-import de.scala_quest.model.{Game => GameTrait, Player => PlayerTrait}
+import de.scala_quest.model.{Game => GameTrait, Player => PlayerTrait, Question => QuestionTrait}
 
 case class Game (
-  var players: List[PlayerTrait] = List(),
-  var currentPlayer:PlayerTrait = null,
-  var currentPlayerIndex: Int = 0,
-  var maxRoundNr: Int = 0,
-  var currentRoundNr: Int = 0,
-  var questionList: List[Question] = List(),
+  players: List[PlayerTrait] = List(),
+  currentPlayer: Option[PlayerTrait] = Option.empty,
+  currentPlayerIndex: Int = 0,
+  maxRoundNr: Int = 0,
+  currentRoundNr: Int = 0,
+  questionList: List[Question] = List(),
 ) extends GameTrait {
 
-  override def addNewPlayer(newPlayer: PlayerTrait): Unit = {
+  override def addNewPlayer(newPlayer: PlayerTrait): Game = {
     // addPlayer parameter = name: String
     // create questionList for player
-    players = players :+ newPlayer
+    copy(players = players :+ newPlayer)
   }
 
   override def removePlayer(player: PlayerTrait): Game = {
-    Game(players.filter(_ != player))
+    copy(players = players.filter(_ != player))
+  }
+
+  override def updatePlayer(player: PlayerTrait): Game = {
+    // addPlayer parameter = name: String
+    // create questionList for player
+
+    val updatedPlayers = players.map(play => if(play.name == player.name) {
+      player
+    } else {
+      play
+    })
+
+    copy(players = updatedPlayers)
   }
 
   override def playerCount(): Int = players.size
 
-  override def updateState() : Unit = {
-    currentPlayerIndex += 1
-    if (currentPlayerIndex < players.size) {
-      currentPlayer = players.lift(currentPlayerIndex).get
+  override def updateState() : Game = {
+    val playerIndex = currentPlayerIndex + 1
+    if (playerIndex < players.size) {
+      copy(currentPlayer = players.lift(playerIndex))
     } else {
-      currentPlayerIndex = 0
-      currentRoundNr += 1
-      currentPlayer = players.lift(currentPlayerIndex).get
+      copy(currentPlayer = players.lift(0), currentPlayerIndex = 0, currentRoundNr = currentRoundNr + 1)
     }
   }
 
-  override def createQuestionList(): Unit = {
+  override def createQuestionList: Game = {
     // TODO: read questions from JSON file
     val ans1 = List(Answer(1, "True"), Answer(2, "False"))
     val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1, 10)
@@ -45,7 +56,22 @@ case class Game (
     val ans3 = List(Answer(1, "1, 2, 3, 4, 5, 6"), Answer(2, "1, 2, 3, 4, 5, 6, 7"))
     val question3 = Question(3, "In scala, the expression '1 to 7' returns a range from", 10, ans3, 2, 10)
 
-    questionList = List(question1, question2, question3)
+    copy(questionList = List(question1, question2, question3))
   }
 
+  override def start: Game = {
+    val currPlayer = players.lift(0)
+    copy(currentPlayer = currPlayer, currentPlayerIndex = 1, maxRoundNr = 3, currentRoundNr = 1)
+  }
+
+  override def nextQuestion(player: PlayerTrait): GameTrait = {
+    val updatedPlayer = player.nextQuestion()
+    val updatedPlayers = players.map(play => if(play.name == player.name) {
+      updatedPlayer
+    } else {
+      play
+    })
+
+    copy(players = updatedPlayers, currentPlayer = Option(updatedPlayer))
+  }
 }
