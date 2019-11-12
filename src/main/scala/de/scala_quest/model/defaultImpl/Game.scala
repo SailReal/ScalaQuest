@@ -39,7 +39,7 @@ case class Game (
   override def updateState() : Game = {
     val playerIndex = currentPlayerIndex + 1
     if (playerIndex < players.size) {
-      copy(currentPlayer = players.lift(playerIndex))
+      copy(currentPlayer = players.lift(playerIndex), currentPlayerIndex = playerIndex)
     } else {
       copy(currentPlayer = players.lift(0), currentPlayerIndex = 0, currentRoundNr = currentRoundNr + 1)
     }
@@ -61,7 +61,7 @@ case class Game (
 
   override def start: Game = {
     val currPlayer = players.lift(0)
-    copy(currentPlayer = currPlayer, currentPlayerIndex = 1, maxRoundNr = 3, currentRoundNr = 1)
+    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 3, currentRoundNr = 1)
   }
 
   override def nextQuestion(player: PlayerTrait): GameTrait = {
