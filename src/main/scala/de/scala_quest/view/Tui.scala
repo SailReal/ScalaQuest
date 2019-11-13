@@ -12,8 +12,6 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   var quit = false
   var startGame = false
   var displayMenu = true
-  var singlePlayerMode = false
-  var multiPlayerMode = false
   var nrOfRoundsWishedToPlay = 3
 
   displayMainMenu()

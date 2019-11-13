@@ -22,8 +22,7 @@ class GameTest extends WordSpec {
   "Game" can {
     "add a player" in {
       val player = Player("name", 0, 0, List())
-      intest.addNewPlayer(player)
-      intest.playerCount() should equal(1)
+      intest.addNewPlayer(player).playerCount() should equal(1)
     }
 
     "remove a player" in {

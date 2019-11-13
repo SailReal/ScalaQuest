@@ -9,13 +9,13 @@ import scala.util.Random
 
 case class Controller(var gameState: GameState) extends ControllerTrait {
 
+  // TODO remove ALL get's
+
   override def onQuit(): Unit = {
     notifyObservers(GameState(UpdateAction.CLOSE_APPLICATION, gameState.game))
   }
 
   override def newGame(): Unit = {
-    // notify observers
-    // set game status to newGame
     gameState = GameState(UpdateAction.BEGIN, gameState.game.createQuestionList) // TODO delete
     notifyObservers(gameState)
   }
@@ -32,7 +32,6 @@ case class Controller(var gameState: GameState) extends ControllerTrait {
     val newPlayer = Player(name, 0, 0, Random.shuffle(questionList), List(), List(), Option.empty)
 
     gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer)) // TODO delete
-
     notifyObservers(gameState)
   }
 

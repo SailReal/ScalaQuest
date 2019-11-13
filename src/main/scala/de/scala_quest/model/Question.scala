@@ -11,6 +11,4 @@ trait Question {
   val answers: List[Answer]
   /** The unique identifier of the correct answer. */
   val correctAnswer: Int
-  /** The time associated with answering the question. */
-  val time: Int
 }

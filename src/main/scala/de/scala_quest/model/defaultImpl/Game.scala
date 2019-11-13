@@ -11,15 +11,9 @@ case class Game (
   questionList: List[Question] = List(),
 ) extends GameTrait {
 
-  override def addNewPlayer(newPlayer: PlayerTrait): Game = {
-    // addPlayer parameter = name: String
-    // create questionList for player
-    copy(players = players :+ newPlayer)
-  }
+  override def addNewPlayer(newPlayer: PlayerTrait): Game = copy(players = players :+ newPlayer)
 
-  override def removePlayer(player: PlayerTrait): Game = {
-    copy(players = players.filter(_ != player))
-  }
+  override def removePlayer(player: PlayerTrait): Game = copy(players = players.filter(_ != player))
 
   override def updatePlayer(player: PlayerTrait): Game = {
     // addPlayer parameter = name: String
@@ -48,13 +42,13 @@ case class Game (
   override def createQuestionList: Game = {
     // TODO: read questions from JSON file
     val ans1 = List(Answer(1, "True"), Answer(2, "False"))
-    val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1, 10)
+    val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1)
 
     val ans2 = List(Answer(1, "var"), Answer(2, "val"))
-    val question2 = Question(2, "Mutable variables start with the keyword", 10, ans2, 1, 10)
+    val question2 = Question(2, "Mutable variables start with the keyword", 10, ans2, 1)
 
     val ans3 = List(Answer(1, "1, 2, 3, 4, 5, 6"), Answer(2, "1, 2, 3, 4, 5, 6, 7"))
-    val question3 = Question(3, "In scala, the expression '1 to 7' returns a range from", 10, ans3, 2, 10)
+    val question3 = Question(3, "In scala, the expression '1 to 7' returns a range from", 10, ans3, 2)
 
     copy(questionList = List(question1, question2, question3))
   }

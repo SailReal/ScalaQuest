@@ -11,9 +11,8 @@ class QuestionTest extends WordSpec {
   final val points = 215
   final val answers:List[Answer] = List()
   final val correctAnswer = 2
-  final val time = 21
 
-  final val intest = Question(id, text, points, answers, correctAnswer, time)
+  final val intest = Question(id, text, points, answers, correctAnswer)
 
   "Question" should  {
     "have a text" in {
@@ -35,11 +34,5 @@ class QuestionTest extends WordSpec {
     "have a correct answer" in {
       intest.correctAnswer should equal(correctAnswer)
     }
-
-    "have a time" in {
-      intest.time should equal(time)
-    }
-
-
   }
 }

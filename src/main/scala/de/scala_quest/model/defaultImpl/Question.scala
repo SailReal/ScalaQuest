@@ -7,6 +7,5 @@ case class Question(
   text: String,
   points: Int,
   answers: List[AnswerTrait],
-  correctAnswer: Int,
-  time: Int
+  correctAnswer: Int
 ) extends QuestionTrait {}
