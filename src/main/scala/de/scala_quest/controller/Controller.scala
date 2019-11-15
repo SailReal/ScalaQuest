@@ -26,6 +26,8 @@ trait Controller extends Observable {
    */
   def getPlayerNames(): List[String]
 
+  def checkGameRoundStatus(): Boolean
+
   /** Returns a tuple
    *
    * @return
