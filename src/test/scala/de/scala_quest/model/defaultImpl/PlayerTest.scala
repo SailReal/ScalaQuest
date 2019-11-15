@@ -1,5 +1,7 @@
 package de.scala_quest.model.defaultImpl
 
+import java.security.InvalidParameterException
+
 import org.scalatest.WordSpec
 import org.scalatest._
 import Matchers._
@@ -37,8 +39,10 @@ class PlayerTest extends WordSpec {
       intest.wrongAnswers should be(wrongAnswers)
     }
 
-    "throw an exception if no name provided" in {
-      Player(null, points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion)
+    "throw an InvalidParameterException if no name provided" in {
+      intercept[InvalidParameterException] {
+        val player = Player("", points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion)
+      }
     }
 
     "display the name" in {
@@ -69,8 +73,20 @@ class PlayerTest extends WordSpec {
 
     "update the player to the next question" in {
       val player = intest.nextQuestion()
-
-      
     }
   }
+
+  "A Player" when {
+    "unapplied should have arguments" in {
+      Player.unapply(intest).get should be((name, points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion))
+    }
+  }
+
+  "A Player" when {
+    "applied should accept the arguments" in {
+      Player.apply(name, points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion) should be(intest)
+    }
+  }
+
+
 }
