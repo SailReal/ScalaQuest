@@ -30,6 +30,8 @@ case class Game (
 
   override def playerCount(): Int = players.size
 
+  override def updateRoundNr: GameTrait = copy(currentRoundNr = currentRoundNr + 1)
+
   override def updateState() : Game = {
     val playerIndex = currentPlayerIndex + 1
     if (playerIndex < players.size) {
@@ -50,12 +52,15 @@ case class Game (
     val ans3 = List(Answer(1, "1, 2, 3, 4, 5, 6"), Answer(2, "1, 2, 3, 4, 5, 6, 7"))
     val question3 = Question(3, "In scala, the expression '1 to 7' returns a range from", 10, ans3, 2)
 
-    copy(questionList = List(question1, question2, question3))
+    val ans4 = List(Answer(1, "(String, Int, Char)"), Answer(2, "((String, Int), Char)"))
+    val question4 = Question(4, "The expression \"Hello\" -> 42 -> 'c' is an instance of", 60, ans4, 2)
+
+    copy(questionList = List(question1, question2, question3, question4))
   }
 
   override def start: Game = {
     val currPlayer = players.lift(0)
-    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 3, currentRoundNr = 1)
+    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 4, currentRoundNr = 1)
   }
 
   override def nextQuestion(player: PlayerTrait): GameTrait = {

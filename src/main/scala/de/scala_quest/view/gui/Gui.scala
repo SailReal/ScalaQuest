@@ -19,7 +19,7 @@ class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui
   override def update(gameState: GameState): Unit = {
     Platform.runLater { () =>
       gameState.action match {
-        case UpdateAction.BEGIN =>
+        case UpdateAction.NEW_GAME =>
           displayMenu()
           this.stage.onCloseRequest = { _ =>
             controller.onQuit()

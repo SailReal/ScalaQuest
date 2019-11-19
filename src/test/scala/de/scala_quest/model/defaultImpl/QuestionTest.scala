@@ -35,4 +35,10 @@ class QuestionTest extends WordSpec {
       intest.correctAnswer should equal(correctAnswer)
     }
   }
+
+  "A Question" when {
+    "unapplied should have arguments in" in {
+      Question.unapply(intest).get should be((id, text, points, answers, correctAnswer))
+    }
+  }
 }

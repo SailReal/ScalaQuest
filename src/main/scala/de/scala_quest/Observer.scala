@@ -2,8 +2,8 @@ package de.scala_quest
 
 object UpdateAction extends Enumeration {
     type UpdateAction = Value
-    val BEGIN, CLOSE_APPLICATION, PLAYER_UPDATE, SHOW_HELP,
-        SHOW_GAME, SHOW_RESULT, TIMER_UPDATE = Value
+    val NEW_GAME, CLOSE_APPLICATION, PLAYER_UPDATE, SHOW_HELP,
+        SHOW_GAME, SHOW_RESULT, TIMER_UPDATE, DO_NOTHING = Value
 }
 
 trait Observer {

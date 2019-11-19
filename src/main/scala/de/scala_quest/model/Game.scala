@@ -45,4 +45,6 @@ trait Game {
 
   def nextQuestion(player: Player): Game
 
+  def updateRoundNr: Game
+
 }

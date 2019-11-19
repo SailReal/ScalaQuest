@@ -16,12 +16,12 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
   }
 
   override def newGame(): Unit = {
-    gameState = GameState(UpdateAction.BEGIN, gameState.game.createQuestionList) // TODO delete
+    gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete
     notifyObservers(gameState)
   }
 
   override def startGame(): Unit = {
-    gameState = GameState(UpdateAction.BEGIN, gameState.game.createQuestionList) // TODO delete really
+    gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete really
     gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start) // TODO delete
     notifyObservers(gameState)
   }
@@ -32,7 +32,7 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     // shuffle the questionList for each new player
     val newPlayer = Player(name, 0, 0, Random.shuffle(questionList), List(), List(), Option.empty)
 
-    gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer)) // TODO delete
+    gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer))
     notifyObservers(gameState)
   }
 
@@ -55,10 +55,21 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
   }
 
   override def getPlayersCurrentAnswers(): List[String] = {
+    // TODO remove gets
     gameState.game.currentPlayer.get.currentQuestion.get.answers.map(a => a.text)
   }
 
   override def getPlayerCount(): Int = gameState.game.playerCount()
+
+  override def checkGameRoundStatus(): Boolean = {
+    if (gameState.game.currentRoundNr <= gameState.game.maxRoundNr) {
+      true
+    } else {
+      gameState = GameState(UpdateAction.SHOW_RESULT, gameState.game)
+      notifyObservers(gameState)
+      false
+    }
+  }
 
   /**
    * NB: Only used by the TUI. The GUI will need a different mechanism to process Answers.
@@ -75,7 +86,8 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
       player.get.wrongAnswer(currentQuestion)
     }
     val game = gameState.game.updatePlayer(updatedPlayer).updateState()
-    gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
+    // gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
+    gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
     notifyObservers(gameState)
   }
 

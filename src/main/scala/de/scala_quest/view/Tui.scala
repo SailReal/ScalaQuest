@@ -7,13 +7,12 @@ import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.Controller
 
 class Tui (controller: Controller) extends Ui with LazyLogging {
-  controller.addObserver(this)
-
+  // controller.addObserver(this)
   val input = new BufferedReader(Console.in)
   var quit = false
   var startGame = false
   var displayMenu = true
-  var nrOfRoundsWishedToPlay = 3
+  var nrOfRoundsWishedToPlay = 4
 
   var stopProcessingInput = false
   var inMenu = true
@@ -51,7 +50,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
    */
   protected def handleMenuInput(line: String): Unit = {
     line match {
-      case "q" => onQuit()
+      case "q" => controller.onQuit() // TODO onQuit() ?
       case "n" =>
         controller.newGame()
         displayNewGameMenu()
@@ -75,7 +74,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     displayMenu = false
     startGame = true
     controller.startGame()
-    displayGame()
+    //displayGame() // TODO maybe needed in gui
   }
 
   /** Displays the names of the current players within the game. */
@@ -86,11 +85,12 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   /** Displays the game's current player with his/her question and respective answers. */
   protected def displayGame(): Unit = {
     val currentRound = controller.getRoundNr()
-    if(currentRound <= nrOfRoundsWishedToPlay) {
+    if(controller.checkGameRoundStatus) {
+    //if(currentRound <= nrOfRoundsWishedToPlay) {
       if (currentRound == nrOfRoundsWishedToPlay) {
         logger.info("Final Round!!!")
       } else {
-        logger.info(s"Round: $currentRound")
+        logger.info(s"Round: $currentRound / $nrOfRoundsWishedToPlay")
       }
       val (name, points) = controller.getPlayerInfo()
       logger.info(s"$name ($points pts)")
@@ -104,7 +104,6 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
           (1 to (questionLength + 10)).foreach(_ => separator += "-")
           logger.info(separator)
           logger.info("Question: " + q)
-        // FIXME: could omit this
         case None =>
           logger.info(s"Player '$name' has no more questions left...")
           displayGameResults()
@@ -159,12 +158,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       logger.info("")
     }
 
-    //onQuit()
-    /*
-    logger.info("")
-    displayMenu = true
-    startGame = false
-    displayMainMenu()*/
+    //onQuit() // TODO maybe needed in gui
   }
 
   /** Handles the keyboard input in relation to the game menu options.
@@ -189,10 +183,33 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     startGame = false
     logger.info("Exiting Application")
     controller.onQuit()
-    sys.exit(0) // FIXME
+    //sys.exit(0) // FIXME
   }
 
-  override def update(gameState: GameState): Unit = {
+  override def update(updateData: GameState): Unit = {
+    updateData.action match {
+      case UpdateAction.NEW_GAME => {
+        displayNewGameMenu
+      }
+      case UpdateAction.SHOW_GAME => {
+        displayGame
+      }
+      case UpdateAction.PLAYER_UPDATE => // does nothing. TODO: delete?
+      case UpdateAction.CLOSE_APPLICATION => {
+        quit = true
+        sys.exit(0) // FIXME: clean close without force exit
+      }
+      case UpdateAction.DO_NOTHING => // does nothing. TODO: delete?
+      case UpdateAction.SHOW_RESULT => {
+        logger.info("That was the final round, calculating results.")
+        Thread.sleep(1250) // Create suspense :)
+        displayGameResults()
+      }
+      case _ =>
+    }
+  }
+
+  /*override def update(gameState: GameState): Unit = {
     gameState.action match {
       case UpdateAction.BEGIN => displayMainMenu()
       case UpdateAction.CLOSE_APPLICATION => stopProcessingInput = true
@@ -203,6 +220,5 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
         inGame = true
       case UpdateAction.SHOW_RESULT => displayGameResults()
       case _ =>
-    }
-  }
+    }*/
 }
