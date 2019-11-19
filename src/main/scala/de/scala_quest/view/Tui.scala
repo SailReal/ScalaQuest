@@ -3,16 +3,21 @@ package de.scala_quest.view
 import java.io.BufferedReader
 
 import com.typesafe.scalalogging.LazyLogging
-import de.scala_quest.GameState
+import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.Controller
 
 class Tui (controller: Controller) extends Ui with LazyLogging {
-  // controller.addObserver(this)
+  controller.addObserver(this)
+
   val input = new BufferedReader(Console.in)
   var quit = false
   var startGame = false
   var displayMenu = true
   var nrOfRoundsWishedToPlay = 3
+
+  var stopProcessingInput = false
+  var inMenu = true
+  var inGame = false
 
   displayMainMenu()
 
@@ -47,15 +52,13 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   protected def handleMenuInput(line: String): Unit = {
     line match {
       case "q" => onQuit()
-      case "n" => {
+      case "n" =>
         controller.newGame()
         displayNewGameMenu()
-      }
       //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
-      case _ => {
+      case _ =>
         logger.info("Unknown command, select either 'n' or 'q'")
         displayMainMenu()
-      }
     }
   }
 
@@ -94,21 +97,19 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       // FIXME: Doesnt need to be an Option anymore since roundNr is fixed.
       val question = controller.getPlayersCurrentQuestion()
       question match {
-        case Some(q) => {
-          val questionLength = q.size
+        case Some(q) =>
+          val questionLength = q.length
           var separator = ""
           // +10 includes "Question:".length + \\s
-          (1 to (questionLength + 10)).foreach(l => separator += "-")
+          (1 to (questionLength + 10)).foreach(_ => separator += "-")
           logger.info(separator)
           logger.info("Question: " + q)
-        }
-          // FIXME: could omit this
-        case None => {
+        // FIXME: could omit this
+        case None =>
           logger.info(s"Player '$name' has no more questions left...")
           displayGameResults()
-        }
       }
-      controller.getPlayersCurrentAnswers.zipWithIndex.foreach {
+      controller.getPlayersCurrentAnswers().zipWithIndex.foreach {
         case (answer, i) => logger.info((i + 1) + ") " + answer)
       }
       logger.info("[q] Quit game")
@@ -130,10 +131,10 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("")
     logger.info("GAME RESULTS")
     logger.info("")
-    players.map(p => {
+    players.foreach(p => {
       logger.info(s"Name: ${p.name} -> ${p.points} pts")
       logger.info(s"Correctly answered questions: ${p.correctAnswers.size}")
-      p.correctAnswers.map(q => {
+      p.correctAnswers.foreach(q => {
         logger.info(s"    * ${q.text}")
       })
       logger.info(s"Wrongly answered questions: ${p.wrongAnswers.size}")
@@ -158,7 +159,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       logger.info("")
     }
 
-    onQuit()
+    //onQuit()
     /*
     logger.info("")
     displayMenu = true
@@ -191,7 +192,17 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     sys.exit(0) // FIXME
   }
 
-  override def update(updateData: GameState): Unit = {
-
+  override def update(gameState: GameState): Unit = {
+    gameState.action match {
+      case UpdateAction.BEGIN => displayMainMenu()
+      case UpdateAction.CLOSE_APPLICATION => stopProcessingInput = true
+      case UpdateAction.PLAYER_UPDATE => displayPlayers()
+      case UpdateAction.SHOW_GAME =>
+        displayGame()
+        inMenu = false
+        inGame = true
+      case UpdateAction.SHOW_RESULT => displayGameResults()
+      case _ =>
+    }
   }
 }

@@ -1,0 +1,151 @@
+/* @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,700'); */
+
+.headline {
+    -fx-font-size: 36px;
+    -fx-font-family: 'Roboto', sans-serif
+}
+
+/* ============================================ */
+/* MENU */
+/* ============================================ */
+
+.menu {
+    background-color: #fff;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+}
+
+.play-button {
+    -fx-text-fill: #fff;
+    -fx-min-width: 430px;
+    -fx-min-height: 60px;
+    -fx-background-color: #259A40;
+    -fx-cursor: hand;
+}
+
+.play-button:hover {
+    -fx-background-color: #1e7e34;
+}
+
+.player-rows-container {
+    -fx-spacing: 10px;
+}
+
+.player-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.player-textfield {
+    -fx-min-width: 360px;
+    -fx-min-height: 30px;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: gray;
+}
+
+.player-textfield-non-editable {
+    -fx-focus-color: rgb(221,221,221);
+    -fx-background-color: rgb(221,221,221);
+}
+
+.help-button {
+    -fx-min-width: 430px;
+    -fx-min-height: 30px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+}
+
+/* ============================================ */
+/* GAME */
+/* ============================================ */
+
+.game {
+    -fx-background-color: #fff;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+}
+
+.answer-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.answer-button {
+    -fx-min-width: 430px;
+    -fx-min-height: 50px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+}
+
+.answer-button:hover {
+    -fx-background-color: lightgray;
+}
+
+/* ============================================ */
+/* RESULT */
+/* ============================================ */
+
+.result {
+    -fx-background-color: #fff;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+}
+
+.player-results {
+    -fx-alignment: center;
+    -fx-spacing: 35px;
+}
+
+.player-result {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.player-name {
+    -fx-font-size: 20px;
+}
+
+.player-points {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.correct-container {
+    -fx-alignment: center;
+}
+
+.correct-text {
+    -fx-font-size: 14px;
+    -fx-fill: #28a745;
+}
+
+.correct-answer { }
+
+.wrong-container {
+    -fx-alignment: center;
+}
+
+.wrong-text {
+    -fx-font-size: 14px;
+    -fx-fill: #d43f3a;
+}
+
+.wrong-answer {}
+
+.winner {
+    -fx-font-size: 14px;
+}
+
+.back-button {
+    -fx-min-width: 430px;
+    -fx-min-height: 50px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: lightgray;
+}

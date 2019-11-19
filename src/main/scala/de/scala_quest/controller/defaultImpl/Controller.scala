@@ -3,11 +3,11 @@ package de.scala_quest.controller.defaultImpl
 import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.{Controller => ControllerTrait}
 import de.scala_quest.model.{Player => PlayerTrait}
-import de.scala_quest.model.defaultImpl.Player
+import de.scala_quest.model.defaultImpl.{Game, Player}
 
 import scala.util.Random
 
-case class Controller(var gameState: GameState) extends ControllerTrait {
+case class Controller(private var gameState: GameState) extends ControllerTrait {
 
   // TODO remove ALL get's
 
@@ -21,7 +21,8 @@ case class Controller(var gameState: GameState) extends ControllerTrait {
   }
 
   override def startGame(): Unit = {
-    gameState = GameState(UpdateAction.BEGIN, gameState.game.start) // TODO delete
+    gameState = GameState(UpdateAction.BEGIN, gameState.game.createQuestionList) // TODO delete really
+    gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start) // TODO delete
     notifyObservers(gameState)
   }
 
@@ -54,7 +55,6 @@ case class Controller(var gameState: GameState) extends ControllerTrait {
   }
 
   override def getPlayersCurrentAnswers(): List[String] = {
-    // TODO remove gets
     gameState.game.currentPlayer.get.currentQuestion.get.answers.map(a => a.text)
   }
 
@@ -81,4 +81,17 @@ case class Controller(var gameState: GameState) extends ControllerTrait {
 
   override def getPlayers(): List[PlayerTrait] = gameState.game.players
   override def getRoundNr(): Int = gameState.game.currentRoundNr
+
+  override def nextPlayerName(): Option[String] = {
+    gameState.game.playerCount() match {
+      case c if c < gameState.game.maxPlayerCount => Some("Player " + (gameState.game.playerCount + 1).toString)
+      case _ => None
+    }
+  }
+
+  /** Remove a player with the given name from the game.
+   *
+   * @param name the player's name
+   */
+  override def removePlayer(name: String): Unit = ???
 }

@@ -20,6 +20,12 @@ trait Controller extends Observable {
    */
   def addNewPlayerToGame(name: String)
 
+  /** Remove a player with the given name from the game.
+   *
+   * @param name the player's name
+   */
+  def removePlayer(name: String): Unit
+
   /** Returns a list containing all player names.
    *
    * @return a list containing a string representation of the player's names
@@ -65,4 +71,5 @@ trait Controller extends Observable {
    */
   def processAnswer(input: Int): Unit
 
+  def nextPlayerName(): Option[String]
 }

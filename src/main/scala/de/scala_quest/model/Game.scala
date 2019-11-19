@@ -1,6 +1,9 @@
 package de.scala_quest.model
 
 trait Game {
+
+  val maxPlayerCount = 2
+
   /** A list of players currently in the game. */
   val players: List[Player]
   /** The player whose turn it currently is. */
