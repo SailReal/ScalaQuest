@@ -12,16 +12,19 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
   // TODO remove ALL get's
 
   override def onQuit(): Unit = {
-    notifyObservers(GameState(UpdateAction.CLOSE_APPLICATION, gameState.game))
+    gameState = GameState(UpdateAction.CLOSE_APPLICATION, gameState.game)
+    notifyObservers(gameState)
   }
 
   override def newGame(): Unit = {
-    gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete
+    println("controller.newGame")
+    //gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList)
+    gameState = GameState(UpdateAction.DO_NOTHING, gameState.game.createQuestionList)
     notifyObservers(gameState)
   }
 
   override def startGame(): Unit = {
-    gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete really
+    //gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete really
     gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start) // TODO delete
     notifyObservers(gameState)
   }
@@ -86,8 +89,12 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
       player.get.wrongAnswer(currentQuestion)
     }
     val game = gameState.game.updatePlayer(updatedPlayer).updateState()
-    // gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
-    gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
+    if (gameState.game.currentRoundNr == gameState.game.maxRoundNr) {
+      gameState = GameState(UpdateAction.SHOW_RESULT, game) // TODO delete
+    } else {
+      gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
+    }
+    //gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
     notifyObservers(gameState)
   }
 

@@ -7,7 +7,8 @@ import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.Controller
 
 class Tui (controller: Controller) extends Ui with LazyLogging {
-  // controller.addObserver(this)
+
+  //controller.addObserver(this)
   val input = new BufferedReader(Console.in)
   var quit = false
   var startGame = false
@@ -20,17 +21,19 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
 
   displayMainMenu()
 
-  while(!quit) {
-    if (input.ready()) {
-      val line = input.readLine()
-      if (displayMenu) {
-        handleMenuInput(line)
-      } else if(startGame) {
-        handleGameInput(line)
-        displayGame()
+  def processInput(input: BufferedReader): Unit = {
+    while (!quit) {
+      if (input.ready()) {
+        val line = input.readLine()
+        if (displayMenu) {
+          handleMenuInput(line)
+        } else if (startGame) {
+          handleGameInput(line)
+          //displayGame()
+        }
+      } else {
+        Thread.sleep(200) // don't waste cpu cycles if no input is given
       }
-    } else {
-      Thread.sleep(200) // don't waste cpu cycles if no input is given
     }
   }
 
@@ -39,8 +42,8 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     logger.info("")
     logger.info("Welcome to ScalaQuest")
     logger.info("Choose and confirm entry with Enter...")
-    logger.info("[n] Start new game")
-    logger.info("[q] Quit game")
+    logger.info("[n] Start New Game")
+    logger.info("[q] Quit Game")
     logger.info("")
   }
 
@@ -51,10 +54,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   protected def handleMenuInput(line: String): Unit = {
     line match {
       case "q" => controller.onQuit() // TODO onQuit() ?
-      case "n" =>
-        controller.newGame()
-        displayNewGameMenu()
-      //case answer if answer.matches("\\d") => controller.onAnswerChosen(answer.toInt)
+      case "n" => controller.newGame()
       case _ =>
         logger.info("Unknown command, select either 'n' or 'q'")
         displayMainMenu()
@@ -157,8 +157,6 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       logger.info(s"Winner(s): $winner")
       logger.info("")
     }
-
-    //onQuit() // TODO maybe needed in gui
   }
 
   /** Handles the keyboard input in relation to the game menu options.
@@ -171,35 +169,27 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case "2" => controller.processAnswer(2)
       case "3" => controller.processAnswer(3)
       case "4" => controller.processAnswer(4)
-      case "q" => onQuit()
+      case "q" => controller.onQuit()
       case _ => logger.info("Not a valid command")
     }
-  }
-
-  /** Ensures for a clean application exit. */
-  def onQuit(): Unit = {
-    quit = true
-    displayMenu = false
-    startGame = false
-    logger.info("Exiting Application")
-    controller.onQuit()
-    //sys.exit(0) // FIXME
   }
 
   override def update(updateData: GameState): Unit = {
     updateData.action match {
       case UpdateAction.NEW_GAME => {
+        println("tui.NEW_GAME")
         displayNewGameMenu
       }
       case UpdateAction.SHOW_GAME => {
+        println("Tui show_game")
         displayGame
       }
       case UpdateAction.PLAYER_UPDATE => // does nothing. TODO: delete?
       case UpdateAction.CLOSE_APPLICATION => {
+        println("tui.CLOSE_APPLICATION")
         quit = true
-        sys.exit(0) // FIXME: clean close without force exit
       }
-      case UpdateAction.DO_NOTHING => // does nothing. TODO: delete?
+      case UpdateAction.DO_NOTHING => displayNewGameMenu// does nothing. TODO: delete?
       case UpdateAction.SHOW_RESULT => {
         logger.info("That was the final round, calculating results.")
         Thread.sleep(1250) // Create suspense :)
