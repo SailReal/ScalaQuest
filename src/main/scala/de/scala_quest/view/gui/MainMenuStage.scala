@@ -5,19 +5,21 @@ import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, TextField}
+import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout._
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
 
-class MenuStage(
+class MainMenuStage(
                  newGameAction: EventHandler[ActionEvent],
                  playerInfo: (List[String], Option[String]),
                  playerAddAction: Function[String, Unit]
                ) extends PrimaryStage {
-  title.value = "ScalaQuest Menu"
+
+  title.value = "ScalaQuest Main Menu" // set stage's title
   resizable = false
-  width = 480
-  height = 540
+  width = 1024
+  height = 768
 
   scene = new Scene {
     fill = White
@@ -29,8 +31,13 @@ class MenuStage(
       val headLine: Text = new Text {
         text = "ScalaQuest"
         styleClass += "headline"
+        effect = new DropShadow {
+          color = DodgerBlue
+          radius = 25
+          spread = 0.25
+        }
       }
-      children += headLine
+      children += headLine // add headline to scene
 
       val newGameButton: Button = new Button {
         text = "Play"
