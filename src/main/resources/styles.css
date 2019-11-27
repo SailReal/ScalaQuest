@@ -1,8 +1,14 @@
 /* @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,700'); */
 
 .headline {
-    -fx-font-size: 36px;
-    -fx-font-family: 'Roboto', sans-serif
+    -fx-text-fill: #006464;
+    -fx-background-color: #DFB951;
+    -fx-stroke: yellow;
+    -fx-stroke-width: 1.5;
+    -fx-font-size: 150px;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(one-pass-box, DodgerBlue, 25, 0.25, 2, 0);
 }
 
 /* ============================================ */
@@ -10,10 +16,31 @@
 /* ============================================ */
 
 .menu {
-    background-color: #fff;
+    background-color: #FFF;
     -fx-font-family: 'Roboto', sans-serif;
+    -fx-spacing: 75px;
     -fx-alignment: center;
-    -fx-spacing: 50px;
+    -fx-padding: 30;
+}
+
+.main-menu-buttons-container {
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+}
+
+.main-menu-buttons {
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-background-color: lightblue;
+    -fx-min-width: 430px;
+    -fx-min-height: 75px;
+    -fx-font-size: 50px;
+    -fx-border-color: #FFF;
+    -fx-border-width: 2;
+}
+.main-menu-buttons:hover {
+    -fx-background-color: #00A6FD;
+    -fx-border-color: black;
 }
 
 .play-button {
@@ -56,9 +83,82 @@
     -fx-cursor: hand;
 }
 
+/* ======================================================================================== */
+/* ==================================== ADD PLAYERS STAGE ================================= */
+/* ======================================================================================== */
+
+.player-names-container {
+    -fx-alignment: center;
+}
+
+/* Styling for "Start Quest" and "Quest Game" Container */
+.add-player-stage-buttons-container {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+}
+
+.add-player-button {
+    -fx-background-color: lightgreen;
+}
+
+.add-player-button:hover {
+    -fx-cursor: hand;
+}
+
+/* Styling for "Start Quest" and "Quit Game" buttons */
+.add-player-stage-buttons {
+    -fx-font-size: 30px;
+    -fx-background-color: lightblue;
+    -fx-border-color: white;
+    -fx-tooltip-visible: true;
+}
+
+/* Styling for "Start Quest" and "Quit Game" when hovering buttons */
+.add-player-stage-buttons:hover {
+    -fx-border-color: black;
+    -fx-background-color: #00A6FD;
+    -fx-cursor: hand;
+}
+
+.remove-player-button {
+    -fx-background-color: red;
+    -fx-border-color: black;
+    -fx-font-size: 10px;
+}
+
+.remove-player-button:hover {
+    -fx-cursor: hand;
+}
+
 /* ============================================ */
 /* GAME */
 /* ============================================ */
+
+.round {
+    -fx-font-size: 28px;
+    -fx-alignment: center;
+}
+
+.player-points-display {
+    -fx-font-size: 24px;
+    -fx-spacing: 10;
+    -fx-padding: 0 0 0 40;
+}
+
+.question {
+    -fx-font-size: 36px;
+    -fx-alignment: center;
+    -fx-border-color: black;
+    -fx-border-style: solid inside;
+    -fx-border-width: 2;
+    -fx-border-insets: 5;
+    -fx-border-radius: 5;
+    -fx-background-color: lightblue;
+    -fx-wrap-text: true;
+    -fx-spacing: 10px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}
 
 .game {
     -fx-background-color: #fff;
