@@ -10,6 +10,7 @@ import de.scala_quest.view.gui.Gui
 import scala.concurrent.Future
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import java.io.BufferedReader
 
 object ScalaQuest {
   def main(args: Array[String]): Unit = {
@@ -27,7 +28,7 @@ object ScalaQuest {
 
     // wait for initialization of JFXApp to be done
     latch.await()
-
     val tui = new Tui(controller)
+    tui.processInput(new BufferedReader(Console.in))
   }
 }
