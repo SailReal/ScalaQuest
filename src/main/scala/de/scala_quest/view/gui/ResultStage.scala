@@ -3,19 +3,25 @@ package de.scala_quest.view.gui
 import de.scala_quest.model.Player
 import scalafx.Includes._
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.Scene
-import scalafx.scene.layout.VBox
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
+import javafx.event.{ActionEvent, EventHandler}
 
-class ResultStage(players: List[Player], backAction: () => Unit) extends PrimaryStage {
+class ResultStage(
+                   players: List[Player],
+                   backAction: () => Unit,
+                   startNewGameAction: EventHandler[ActionEvent],
+                   quitGameAction: EventHandler[ActionEvent],
+                 ) extends PrimaryStage {
+
   title.value = "ScalaQuest Result"
-  width = 480
-  height = players.length match {
-    case 1 => 560
-    case _ => 720
-  }
+  width = 1024
+  height = 768
 
   scene = new Scene {
     fill = White
@@ -27,6 +33,12 @@ class ResultStage(players: List[Player], backAction: () => Unit) extends Primary
       val headline: Text = new Text {
         text = "Result"
         styleClass += "headline"
+        // add effect to css
+        effect = new DropShadow {
+          color = DodgerBlue
+          radius = 25
+          spread = 0.25
+        }
       }
       children += headline
 
@@ -54,7 +66,7 @@ class ResultStage(players: List[Player], backAction: () => Unit) extends Primary
 
               if (p.correctAnswers.nonEmpty) {
                 val correctText = new Text {
-                  text = "Correct answers"
+                  text = "Correctly answered questions:"
                   styleClass += "correct-text"
                 }
                 children += correctText
@@ -75,7 +87,7 @@ class ResultStage(players: List[Player], backAction: () => Unit) extends Primary
 
               if (p.wrongAnswers.nonEmpty) {
                 val wrongText = new Text {
-                  text = "Wrong answers"
+                  text = "Wrongly answered questions:"
                   styleClass += "wrong-text"
                 }
                 children += wrongText
@@ -105,12 +117,35 @@ class ResultStage(players: List[Player], backAction: () => Unit) extends Primary
       }
       children += winner
 
-      val backButton: Button = new Button {
+      val actionButtonContainer = new HBox {
+        styleClass += "add-player-stage-buttons-container"
+        alignment = Pos.BottomRight // move to css
+
+        // Create start game button
+        val startGameButton: Button = new Button {
+          text = "Start New Game"
+          styleClass += "add-player-stage-buttons"
+          //onAction = startNewGameAction
+        }
+        children += startGameButton
+
+        // Create quit game button.
+        val quitButton: Button = new Button {
+          text = "Quit Game"
+          styleClass += "add-player-stage-buttons"
+          alignment = Pos.BottomRight
+          onAction = quitGameAction
+        }
+        children += quitButton
+      }
+      children += actionButtonContainer
+
+      /*val backButton: Button = new Button {
         text = "Back"
         onAction = backAction
         styleClass += "back-button"
       }
-      children += backButton
+      children += backButton*/
     }
   }
 }
