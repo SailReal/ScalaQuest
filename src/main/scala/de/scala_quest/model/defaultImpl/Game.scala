@@ -13,12 +13,9 @@ case class Game (
 
   override def addNewPlayer(newPlayer: PlayerTrait): Game = copy(players = players :+ newPlayer)
 
-  override def removePlayer(player: PlayerTrait): Game = copy(players = players.filter(_ != player))
+  override def removePlayer(player: PlayerTrait): Game = copy(players = players.filter(_.name != player.name))
 
   override def updatePlayer(player: PlayerTrait): Game = {
-    // addPlayer parameter = name: String
-    // create questionList for player
-
     val updatedPlayers = players.map(play => if(play.name == player.name) {
       player
     } else {
