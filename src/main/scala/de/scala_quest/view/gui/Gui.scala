@@ -8,11 +8,12 @@ import de.scala_quest.model.{Player, Question}
 import de.scala_quest.view.Ui
 import scalafx.application.{JFXApp, Platform}
 
-class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui with Observer {
+class Gui (controller: Controller,
+           latch: CountDownLatch
+           ) extends JFXApp with Ui with Observer with Runnable {
   controller.addObserver(this)
 
-  // signal initialization finished
-  latch.countDown()
+  latch.countDown() // signal initialization finished
 
   displayMainMenu()
 
@@ -28,7 +29,6 @@ class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui
         }
         case UpdateAction.PLAYER_UPDATE => displayAddPlayersStage()
         case UpdateAction.SHOW_GAME => {
-          println("gui.show_game")
           val (name, points) = controller.getPlayerInfo()
           displayGame2(
             controller.getRoundNr(),
@@ -41,24 +41,16 @@ class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui
         case UpdateAction.SHOW_RESULT => {
           displayResult(gameState.game.players)
         }
-        case _ => {
-          println("case _")
-          displayAddPlayersStage
-        }
+        case _ => displayAddPlayersStage
+
       }
     }
   }
 
   def displayMainMenu(): Unit = {
     this.stage = new MainMenuStage(
-      _ => {
-        println("...")
-        controller.newGame()
-      },
-      _ => {
-        println("abc")
-        controller.onQuit()
-      },
+      _ => controller.newGame(),
+      _ => controller.onQuit(),
       (controller.getPlayerNames(), controller.nextPlayerName()),
       name => controller.addNewPlayerToGame(name)
     )
@@ -68,7 +60,8 @@ class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui
     this.stage = new AddPlayersStage(
       quitGameAction => controller.onQuit(),
       controller.getPlayerNames(),
-      name => controller.addNewPlayerToGame(name),
+      nameToAdd => controller.addNewPlayerToGame(nameToAdd),
+      nameToRemove => controller.removePlayer(nameToRemove),
       _ => controller.startGame(),
     )
   }
@@ -96,4 +89,9 @@ class Gui (controller: Controller, latch: CountDownLatch) extends JFXApp with Ui
   def displayResult(players: List[Player]): Unit = {
     this.stage = new ResultStage(players, () => (), _ => controller.startGame(), _ => controller.onQuit())
   }
+
+  override def run(): Unit = {
+    displayMainMenu()
+  }
+
 }

@@ -89,6 +89,13 @@
 
 .player-names-container {
     -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+.add-player-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
 }
 
 /* Styling for "Start Quest" and "Quest Game" Container */

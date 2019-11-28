@@ -17,7 +17,6 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
   }
 
   override def newGame(): Unit = {
-    println("controller.newGame")
     //gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList)
     gameState = GameState(UpdateAction.DO_NOTHING, gameState.game.createQuestionList)
     notifyObservers(gameState)
@@ -36,6 +35,16 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     val newPlayer = Player(name, 0, 0, Random.shuffle(questionList), List(), List(), Option.empty)
 
     gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer))
+    notifyObservers(gameState)
+  }
+
+  /** Remove a player with the given name from the game.
+   *
+   * @param name the player's name
+   */
+  override def removePlayer(name: String): Unit = {
+    val newPlayer = Player(name, 0, 0, List(), List(), List(), Option.empty)
+    gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.removePlayer(newPlayer))
     notifyObservers(gameState)
   }
 
@@ -108,9 +117,4 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     }
   }
 
-  /** Remove a player with the given name from the game.
-   *
-   * @param name the player's name
-   */
-  override def removePlayer(name: String): Unit = ???
 }

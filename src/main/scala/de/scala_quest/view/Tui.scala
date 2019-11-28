@@ -29,7 +29,6 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
           handleMenuInput(line)
         } else if (startGame) {
           handleGameInput(line)
-          //displayGame()
         }
       } else {
         Thread.sleep(200) // don't waste cpu cycles if no input is given
