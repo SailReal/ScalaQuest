@@ -17,10 +17,9 @@ class Gui (controller: Controller
         case UpdateAction.NEW_GAME => _ => displayAddPlayersStage()
         case UpdateAction.CLOSE_APPLICATION => _ => this.stage.close()
         case UpdateAction.PLAYER_UPDATE => _ => displayAddPlayersStage()
-        case UpdateAction.SHOW_GAME => _ => {
+        case UpdateAction.SHOW_GAME => _ =>
           val (name, points) = controller.getPlayerInfo()
-          displayGame2(name, points)
-        }
+          displayGame(name, points)
         case UpdateAction.SHOW_RESULT => _ => displayResult(gameState.game.players)
         case _ => _ => displayAddPlayersStage()
       }
@@ -45,16 +44,8 @@ class Gui (controller: Controller
     )
   }
 
-  def displayGame(question: Question, multiplayer: Boolean): Unit = {
+  def displayGame(playersName: String, playersPoints: String): Unit = {
     this.stage = new GameStage(
-      question,
-      !multiplayer,
-      controller.processAnswer
-    )
-  }
-
-  def displayGame2(playersName: String, playersPoints: String): Unit = {
-    this.stage = new GameStage2(
       controller.getRoundNr(),
       playersName,
       playersPoints,

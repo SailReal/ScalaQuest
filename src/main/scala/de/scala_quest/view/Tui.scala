@@ -5,6 +5,7 @@ import java.io.BufferedReader
 import com.typesafe.scalalogging.LazyLogging
 import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.Controller
+import de.scala_quest.model.Player
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -53,7 +54,9 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case "q" => _ => controller.onQuit() // TODO onQuit() ?
       case "n" => _ => controller.newGame()
       case _ => _ => {
-        line.split("\\s*(\\s|,)\\s*").foreach(name => controller.addNewPlayerToGame(name))
+        line
+          .split("\\s*(\\s|,)\\s*")
+          .foreach(name => controller.addNewPlayerToGame(name))
 
         displayMenu = false
         startGame = true
@@ -68,10 +71,11 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     "Enter player name(s), a comma or whitespace separated list. (For example: Foo, Bar, Baz)"
   }
 
+  // TODO refactore
   /** Displays the game's current player with his/her question and respective answers. */
   private def displayGame(): Unit = {
     val currentRound = controller.getRoundNr()
-    if(controller.checkGameRoundStatus) {
+    if(controller.checkGameRoundStatus()) {
     //if(currentRound <= nrOfRoundsWishedToPlay) {
       if (currentRound == nrOfRoundsWishedToPlay) {
         logger.info("Final Round!!!")
@@ -92,7 +96,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
           logger.info("Question: " + q)
         case None =>
           logger.info(s"Player '$name' has no more questions left...")
-          displayGameResults()
+          logger.info(displayGameResults())
       }
       controller.getPlayersCurrentAnswers().zipWithIndex.foreach {
         case (answer, i) => logger.info((i + 1) + ") " + answer)
@@ -102,7 +106,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     } else {
       logger.info("That was the final round, calculating results.")
       Thread.sleep(1250) // Create suspense :)
-      displayGameResults()
+      logger.info(displayGameResults())
     }
   }
 
@@ -110,39 +114,43 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
    * with their respective points, correctly answered and wrongly answered
    * questions as well as the overall winner.
    */
-  private def displayGameResults(): Unit = {
+  private def displayGameResults(): String = {
     val players = controller.getPlayers()
-    println("")
-    logger.info("")
-    logger.info("GAME RESULTS")
-    logger.info("")
+
+    var stringBuilder = new StringBuilder
+    stringBuilder = stringBuilder ++= "\nGAME RESULTS\n"
+    stringBuilder = stringBuilder ++= highScore(players)
+    stringBuilder = stringBuilder ++= winner(players)
+    stringBuilder.toString()
+  }
+
+  private def highScore(players: List[Player]): String = {
+    var stringBuilder = new StringBuilder
+
     players.foreach(p => {
-      logger.info(s"Name: ${p.name} -> ${p.points} pts")
-      logger.info(s"Correctly answered questions: ${p.correctAnswers.size}")
-      p.correctAnswers.foreach(q => {
-        logger.info(s"    * ${q.text}")
-      })
-      logger.info(s"Wrongly answered questions: ${p.wrongAnswers.size}")
-      p.wrongAnswers.foreach(q => {
-        logger.info(s"  * ${q.text}. (correct ans: ${q.answers.find(a => a.id == q.correctAnswer).get.text})")
-      })
-      logger.info("")
+      stringBuilder = stringBuilder ++= s"Name: ${p.name} -> ${p.points} pts\n"
+      stringBuilder = stringBuilder ++= s"Correctly answered questions: ${p.correctAnswers.size}\n"
+      p.correctAnswers.foreach(q => stringBuilder = stringBuilder ++= s"    * ${q.text}\n")
+      stringBuilder = stringBuilder ++= s"Wrongly answered questions: ${p.wrongAnswers.size}\n"
+      p.wrongAnswers.foreach(q => stringBuilder = stringBuilder ++= s"  * ${q.text}. (correct ans: ${q.answers.find(a => a.id == q.correctAnswer).get.text})\n")
     })
 
-    if (controller.getPlayerCount() > 1) {
-      // Derive winner(s)
-      val sortedAscList = players.sortBy(_.points)
-      var winner: String = sortedAscList.last.name
-      val highestScore = sortedAscList.last.points
-      // Check if any other player has same high score
-      sortedAscList.dropRight(1).foreach(p => {
-        if (p.points == highestScore) {
-          winner += s", ${p.name}"
-        }
-      })
-      logger.info(s"Winner(s): $winner")
-      logger.info("")
-    }
+    stringBuilder.toString()
+  }
+
+  private def winner(players: List[Player]): String = {
+    // Derive winner(s)
+    val sortedAscList = players.sortBy(_.points)
+    var winner: String = sortedAscList.last.name
+    val highestScore = sortedAscList.last.points
+    // Check if any other player has same high score
+    sortedAscList.dropRight(1).foreach(p => {
+      if (p.points == highestScore) {
+        winner += s", ${p.name}"
+      }
+    })
+
+    s"Winner(s): $winner"
   }
 
   private def handleGameInput[T](line: String): Function[T, Unit] = {
@@ -166,7 +174,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
       case UpdateAction.SHOW_RESULT => _ => {
         logger.info("That was the final round, calculating results.")
         Thread.sleep(1250) // Create suspense :)
-        displayGameResults()
+        logger.info(displayGameResults())
       }
       case _ => _ => ()
     }

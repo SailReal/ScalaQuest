@@ -1,79 +1,92 @@
 package de.scala_quest.view.gui
 
-import de.scala_quest.model.Question
-import javafx.scene.input.KeyCode
+import javafx.event.{ActionEvent, EventHandler}
 import scalafx.application.JFXApp.PrimaryStage
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
-import scalafx.scene.control.Button
-import scalafx.scene.layout.VBox
-import scalafx.scene.paint.Color
+import scalafx.scene.control.{Button, Label}
+import scalafx.scene.effect.DropShadow
+import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
+import scalafx.Includes._
 
 class GameStage(
-    question: Question,
-    allowMouseInput: Boolean,
-    onInput: Function[Int, Unit]
-) extends PrimaryStage {
+                roundNr: Int,
+                playersN: String,
+                playersP: String,
+                question: String,
+                answers: List[String],
+                quitGameAction: EventHandler[ActionEvent],
+                processAnswerAction: Function[Int, Unit]
+                ) extends PrimaryStage {
 
-    title.value = "ScalaQuest Game"
-    width = 640
-    height = if (allowMouseInput) 480 else 520
+  title.value = "ScalaQuest"
+  scene = new Scene {
+    fill = White
+    stylesheets += "styles.css"
 
-    scene = new Scene {
-        fill = White
-        stylesheets.add("styles.css")
+    root = new VBox {
+      styleClass += "game"
 
-        root = new VBox {
-            styleClass += "game"
+      // Display round information. Either 'Round x' or 'Final Round'
+      val roundNrLabel = new Label {
+        text = "Round " + roundNr
+        styleClass += "round"
 
-            val questionProp: Text = new Text {
-                text = question.text
-                styleClass += "headline"
-            }
+      }
+      children += roundNrLabel // add roundLabel to scene
 
-            children.add(questionProp)
-
-            val answerBox: VBox = new VBox {
-                styleClass += "answer-container"
-
-                question.answers.zipWithIndex.foreach { case (ans, i) =>
-                    val btn = new Button {
-                        styleClass += "answer-button"
-
-                        text = "Answer " + (i + 1) + ": " + ans.text
-                        if (allowMouseInput) {
-                            onAction = _ => onInput(ans.id)
-                        }
-                    }
-
-                    children.add(btn)
-                }
-            }
-            children.add(answerBox)
-
-            if (!allowMouseInput) {
-                val warning = new Text {
-                    text = "Mouse input not allowed, use keyboard instead"
-                    fill = Color.Red
-                }
-
-                children.add(warning)
-            }
+      // Display player's name and points
+      val playersNameAndPointsContainer = new HBox {
+        styleClass += "player-points-display"
+        val playersName = new Label {
+          text = playersN
         }
+        val playersPoints = new Label {
+          text = "[" + playersP + " pts]"
+        }
+        children += playersName
+        children += playersPoints
+      }
+      children += playersNameAndPointsContainer
 
-        onKeyReleased = { e => {
-            e.getCode match {
-                case KeyCode.DIGIT1 => onInput(1)
-                case KeyCode.DIGIT2 => onInput(2)
-                case KeyCode.DIGIT3 => onInput(3)
-                case KeyCode.DIGIT4 => onInput(4)
-                case KeyCode.DIGIT6 => onInput(6)
-                case KeyCode.DIGIT7 => onInput(7)
-                case KeyCode.DIGIT8 => onInput(8)
-                case KeyCode.DIGIT9 => onInput(9)
-                case _ =>
+      // Display the current player's question and respective answers
+      val QnAContainer = new VBox {
+        spacing = 10
+        alignment = Pos.Center
+        val questionLabel = new Label {
+          text = question
+          styleClass += "question"
+        }
+        children += questionLabel
+
+        val answerContainer: VBox = new VBox {
+          styleClass += "answer-container"
+          answers.zipWithIndex.foreach { case (ans, i) =>
+            val btn = new Button {
+              styleClass += "answer-button"
+              text = "" + (i + 1) + ") " + ans
+              onAction = (event: ActionEvent) => processAnswerAction((i + 1))
+
             }
-        }}
+            children.add(btn)
+          }
+        }
+        children.add(answerContainer)
+      }
+      children += QnAContainer
+
+      // Create quit game button
+      val quitButton: Button = new Button {
+        text = "Quit Application"
+        tooltip = "Click me to exit the application"
+        styleClass += "single-player-button"
+        alignment = Pos.CenterRight
+        onAction = quitGameAction
+      }
+      children += quitButton
+
     }
+  }
 }
