@@ -1,50 +1,29 @@
 package de.scala_quest.view.gui
 
-import java.util.concurrent.CountDownLatch
-
 import de.scala_quest.{GameState, Observer, UpdateAction}
 import de.scala_quest.controller.Controller
 import de.scala_quest.model.{Player, Question}
 import de.scala_quest.view.Ui
 import scalafx.application.{JFXApp, Platform}
 
-class Gui (controller: Controller,
-           latch: CountDownLatch
+class Gui (controller: Controller
            ) extends JFXApp with Ui with Observer with Runnable {
   controller.addObserver(this)
 
-  latch.countDown() // signal initialization finished
-
   displayMainMenu()
 
-  override def update(gameState: GameState): Unit = {
-    Platform.runLater { () =>
+  override def update[T](gameState: GameState) : Function[T, Unit] = {
       gameState.action match {
-        case UpdateAction.NEW_GAME => {
-          println("gui.NEW_GAME")
-        }
-        case UpdateAction.CLOSE_APPLICATION => {
-          println("gui.CLOSE_APPLICATION")
-          this.stage.close()
-        }
-        case UpdateAction.PLAYER_UPDATE => displayAddPlayersStage()
-        case UpdateAction.SHOW_GAME => {
+        case UpdateAction.NEW_GAME => _ => displayAddPlayersStage()
+        case UpdateAction.CLOSE_APPLICATION => _ => this.stage.close()
+        case UpdateAction.PLAYER_UPDATE => _ => displayAddPlayersStage()
+        case UpdateAction.SHOW_GAME => _ => {
           val (name, points) = controller.getPlayerInfo()
-          displayGame2(
-            controller.getRoundNr(),
-            name,
-            points,
-            controller.getPlayersCurrentQuestion().get,
-            controller.getPlayersCurrentAnswers(),
-          )
+          displayGame2(name, points)
         }
-        case UpdateAction.SHOW_RESULT => {
-          displayResult(gameState.game.players)
-        }
-        case _ => displayAddPlayersStage
-
+        case UpdateAction.SHOW_RESULT => _ => displayResult(gameState.game.players)
+        case _ => _ => displayAddPlayersStage()
       }
-    }
   }
 
   def displayMainMenu(): Unit = {
@@ -58,7 +37,7 @@ class Gui (controller: Controller,
 
   def displayAddPlayersStage(): Unit = {
     this.stage = new AddPlayersStage(
-      quitGameAction => controller.onQuit(),
+      _ => controller.onQuit(),
       controller.getPlayerNames(),
       nameToAdd => controller.addNewPlayerToGame(nameToAdd),
       nameToRemove => controller.removePlayer(nameToRemove),
@@ -74,24 +53,28 @@ class Gui (controller: Controller,
     )
   }
 
-  def displayGame2(roundNr: Int, playersName: String, playersPoints: String, question: String, answers: List[String]): Unit = {
+  def displayGame2(playersName: String, playersPoints: String): Unit = {
     this.stage = new GameStage2(
-      roundNr,
+      controller.getRoundNr(),
       playersName,
       playersPoints,
-      question,
-      answers,
+      controller.getPlayersCurrentQuestion().get,
+      controller.getPlayersCurrentAnswers(),
       _ => controller.onQuit(),
       input => controller.processAnswer(input),
     )
   }
 
   def displayResult(players: List[Player]): Unit = {
-    this.stage = new ResultStage(players, () => (), _ => controller.startGame(), _ => controller.onQuit())
+    this.stage = new ResultStage(
+      players,
+      () => (),
+      _ => controller.startGame(),
+      _ => controller.onQuit()
+    )
   }
 
   override def run(): Unit = {
     displayMainMenu()
   }
-
 }

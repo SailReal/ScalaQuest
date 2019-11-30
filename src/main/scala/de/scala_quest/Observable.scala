@@ -8,6 +8,6 @@ trait Observable {
 
     def removeObserver(observer: Observer): Unit = observers = observers.filter(_ != observer)
 
-    protected def notifyObservers(data: GameState): Unit = observers.foreach(o => o.update(data))
+    protected def notifyObservers(data: GameState): Unit = observers.foreach(o => o.update(data).apply())
 
 }

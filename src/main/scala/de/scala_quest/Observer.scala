@@ -7,5 +7,5 @@ object UpdateAction extends Enumeration {
 }
 
 trait Observer {
-    def update(updateData: GameState): Unit
+    def update[T](updateData: GameState) : Function[T, Unit]
 }

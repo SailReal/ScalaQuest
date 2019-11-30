@@ -17,14 +17,12 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
   }
 
   override def newGame(): Unit = {
-    //gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList)
-    gameState = GameState(UpdateAction.DO_NOTHING, gameState.game.createQuestionList)
+    gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList)
     notifyObservers(gameState)
   }
 
   override def startGame(): Unit = {
-    //gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList) // TODO delete really
-    gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start) // TODO delete
+    gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start)
     notifyObservers(gameState)
   }
 

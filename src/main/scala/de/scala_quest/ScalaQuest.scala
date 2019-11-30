@@ -1,16 +1,15 @@
 package de.scala_quest
 
-import java.util.concurrent.CountDownLatch
-
 import de.scala_quest.controller.Controller
 import com.google.inject.Guice
 import de.scala_quest.view.Tui
 import de.scala_quest.view.gui.Gui
 
-import scala.concurrent.Future
-
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import java.io.BufferedReader
+
+import scala.concurrent.duration.Duration
+
 
 object ScalaQuest {
   def main(args: Array[String]): Unit = {
@@ -18,17 +17,10 @@ object ScalaQuest {
     val injector = Guice.createInjector(new ScalaQuestModule())
     val controller = injector.getInstance(classOf[Controller])
 
-    val latch = new CountDownLatch(1)
+    val gui = Future {new Gui(controller).main(Array())}
+    val tui = Future {new Tui(controller)}
 
-    // run GUI on its own thread
-    Future {
-      val gui = new Gui(controller, latch)
-      gui.main(Array())
-    }
-
-    // wait for initialization of JFXApp to be done
-    latch.await()
-    val tui = new Tui(controller)
-    tui.processInput(new BufferedReader(Console.in))
+    Await.ready(tui, Duration.Inf)
+    Await.ready(gui, Duration.Inf)
   }
 }

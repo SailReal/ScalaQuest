@@ -6,9 +6,12 @@ import com.typesafe.scalalogging.LazyLogging
 import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.Controller
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class Tui (controller: Controller) extends Ui with LazyLogging {
 
-  //controller.addObserver(this)
+  controller.addObserver(this)
   val input = new BufferedReader(Console.in)
   var quit = false
   var startGame = false
@@ -19,16 +22,16 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   var inMenu = true
   var inGame = false
 
-  displayMainMenu()
+  logger.info(displayMainMenu())
 
-  def processInput(input: BufferedReader): Unit = {
+  Future {
     while (!quit) {
       if (input.ready()) {
         val line = input.readLine()
         if (displayMenu) {
-          handleMenuInput(line)
+          handleMenuInput(line).apply()
         } else if (startGame) {
-          handleGameInput(line)
+          handleGameInput(line).apply()
         }
       } else {
         Thread.sleep(200) // don't waste cpu cycles if no input is given
@@ -37,52 +40,36 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
   }
 
   /** Displays the game's main menu. */
-  def displayMainMenu(): Unit = {
-    logger.info("")
-    logger.info("Welcome to ScalaQuest")
-    logger.info("Choose and confirm entry with Enter...")
-    logger.info("[n] Start New Game")
-    logger.info("[q] Quit Game")
-    logger.info("")
+  private def displayMainMenu(): String = {
+    "\nWelcome to ScalaQuest\nChoose and confirm entry with Enter...\n[n] Start New Game\n[q] Quit Game\n"
   }
 
   /** Handles the keyboard input in relation to the main menu options.
    *
    * @param line the text the user entered via the command line
    */
-  protected def handleMenuInput(line: String): Unit = {
+  private def handleMenuInput[T](line: String): Function[T, Unit] = {
     line match {
-      case "q" => controller.onQuit() // TODO onQuit() ?
-      case "n" => controller.newGame()
-      case _ =>
-        logger.info("Unknown command, select either 'n' or 'q'")
-        displayMainMenu()
+      case "q" => _ => controller.onQuit() // TODO onQuit() ?
+      case "n" => _ => controller.newGame()
+      case _ => _ => {
+        line.split("\\s*(\\s|,)\\s*").foreach(name => controller.addNewPlayerToGame(name))
+
+        displayMenu = false
+        startGame = true
+
+        controller.startGame()
+      }
     }
   }
 
   /** Displays the new game menu where players are allowed to enter their names. */
-  def displayNewGameMenu(): Unit = {
-    logger.info("")
-    logger.info("Enter player name(s), a comma or whitespace separated list. (For example: Foo, Bar, Baz)")
-    val playerNames = input.readLine()
-    logger.info("Welcome")
-    // add each player to the game
-    playerNames.split("\\s*(\\s|,)\\s*").foreach(name => controller.addNewPlayerToGame(name))
-    displayPlayers()
-    println("")
-    displayMenu = false
-    startGame = true
-    controller.startGame()
-    //displayGame() // TODO maybe needed in gui
-  }
-
-  /** Displays the names of the current players within the game. */
-  def displayPlayers(): Unit = {
-    logger.info("Players: " + controller.getPlayerNames().mkString(", "))
+  private def displayNewGameMenu(): String = {
+    "Enter player name(s), a comma or whitespace separated list. (For example: Foo, Bar, Baz)"
   }
 
   /** Displays the game's current player with his/her question and respective answers. */
-  protected def displayGame(): Unit = {
+  private def displayGame(): Unit = {
     val currentRound = controller.getRoundNr()
     if(controller.checkGameRoundStatus) {
     //if(currentRound <= nrOfRoundsWishedToPlay) {
@@ -123,7 +110,7 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
    * with their respective points, correctly answered and wrongly answered
    * questions as well as the overall winner.
    */
-  protected def displayGameResults(): Unit = {
+  private def displayGameResults(): Unit = {
     val players = controller.getPlayers()
     println("")
     logger.info("")
@@ -158,56 +145,30 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     }
   }
 
-  /** Handles the keyboard input in relation to the game menu options.
-   *
-   * @param line the user's input via the command line
-   */
-  protected def handleGameInput(line: String): Unit = {
+  private def handleGameInput[T](line: String): Function[T, Unit] = {
     line match {
-      case "1" => controller.processAnswer(1)
-      case "2" => controller.processAnswer(2)
-      case "3" => controller.processAnswer(3)
-      case "4" => controller.processAnswer(4)
-      case "q" => controller.onQuit()
-      case _ => logger.info("Not a valid command")
+      case "1" => _ => controller.processAnswer(1)
+      case "2" => _ => controller.processAnswer(2)
+      case "3" => _ => controller.processAnswer(3)
+      case "4" => _ => controller.processAnswer(4)
+      case "q" => _ => controller.onQuit()
+      case _ => _ => logger.info("Not a valid command")
     }
   }
 
-  override def update(updateData: GameState): Unit = {
+  override def update[T](updateData: GameState) : Function[T, Unit] = {
     updateData.action match {
-      case UpdateAction.NEW_GAME => {
-        println("tui.NEW_GAME")
-        displayNewGameMenu
-      }
-      case UpdateAction.SHOW_GAME => {
-        println("Tui show_game")
-        displayGame
-      }
-      case UpdateAction.PLAYER_UPDATE => // does nothing. TODO: delete?
-      case UpdateAction.CLOSE_APPLICATION => {
-        println("tui.CLOSE_APPLICATION")
-        quit = true
-      }
-      case UpdateAction.DO_NOTHING => displayNewGameMenu// does nothing. TODO: delete?
-      case UpdateAction.SHOW_RESULT => {
+      case UpdateAction.NEW_GAME => _ => logger.info(displayNewGameMenu())
+      case UpdateAction.SHOW_GAME => _ => displayGame()
+      case UpdateAction.PLAYER_UPDATE => _ => () // does nothing. TODO: delete?
+      case UpdateAction.CLOSE_APPLICATION => _ => quit = true
+      case UpdateAction.DO_NOTHING => _ => logger.info(displayNewGameMenu())// does nothing. TODO: delete?
+      case UpdateAction.SHOW_RESULT => _ => {
         logger.info("That was the final round, calculating results.")
         Thread.sleep(1250) // Create suspense :)
         displayGameResults()
       }
-      case _ =>
+      case _ => _ => ()
     }
   }
-
-  /*override def update(gameState: GameState): Unit = {
-    gameState.action match {
-      case UpdateAction.BEGIN => displayMainMenu()
-      case UpdateAction.CLOSE_APPLICATION => stopProcessingInput = true
-      case UpdateAction.PLAYER_UPDATE => displayPlayers()
-      case UpdateAction.SHOW_GAME =>
-        displayGame()
-        inMenu = false
-        inGame = true
-      case UpdateAction.SHOW_RESULT => displayGameResults()
-      case _ =>
-    }*/
 }
