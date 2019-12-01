@@ -164,19 +164,19 @@ class Tui (controller: Controller) extends Ui with LazyLogging {
     }
   }
 
-  override def update[T](updateData: GameState) : Function[T, Unit] = {
-    updateData.action match {
-      case UpdateAction.NEW_GAME => _ => logger.info(displayNewGameMenu())
-      case UpdateAction.SHOW_GAME => _ => displayGame()
-      case UpdateAction.PLAYER_UPDATE => _ => () // does nothing. TODO: delete?
-      case UpdateAction.CLOSE_APPLICATION => _ => quit = true
-      case UpdateAction.DO_NOTHING => _ => logger.info(displayNewGameMenu())// does nothing. TODO: delete?
-      case UpdateAction.SHOW_RESULT => _ => {
-        logger.info("That was the final round, calculating results.")
-        Thread.sleep(1250) // Create suspense :)
-        logger.info(displayGameResults())
-      }
-      case _ => _ => ()
+  def update(gameState: GameState): Unit = {
+      gameState.action match {
+        case UpdateAction.NEW_GAME => logger.info(displayNewGameMenu())
+        case UpdateAction.SHOW_GAME => displayGame()
+        case UpdateAction.PLAYER_UPDATE => () // does nothing. TODO: delete?
+        case UpdateAction.CLOSE_APPLICATION => quit = true
+        case UpdateAction.DO_NOTHING => logger.info(displayNewGameMenu())// does nothing. TODO: delete?
+        case UpdateAction.SHOW_RESULT => {
+          logger.info("That was the final round, calculating results.")
+          Thread.sleep(1250) // Create suspense :)
+          logger.info(displayGameResults())
+        }
+        case _ => ()
     }
   }
 }
