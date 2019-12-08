@@ -57,7 +57,7 @@ case class Game (
 
   override def start: Game = {
     val currPlayer = players.lift(0)
-    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 4, currentRoundNr = 1)
+    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 3, currentRoundNr = 1)
   }
 
   override def nextQuestion(player: PlayerTrait): GameTrait = {

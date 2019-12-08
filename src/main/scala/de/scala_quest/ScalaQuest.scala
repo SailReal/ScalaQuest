@@ -7,9 +7,7 @@ import de.scala_quest.view.gui.Gui
 
 import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-
 import scala.concurrent.duration.Duration
-
 
 object ScalaQuest {
   def main(args: Array[String]): Unit = {

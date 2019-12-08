@@ -137,13 +137,38 @@
     -fx-cursor: hand;
 }
 
-/* ============================================ */
-/* GAME */
-/* ============================================ */
+/* ======================================================================================== */
+/* ======================================= GAME STAGE ===================================== */
+/* ======================================================================================== */
+.game-stage-quit-button {
+    -fx-font-size: 30px;
+    -fx-background-color: lightblue;
+    -fx-border-color: white;
+    -fx-alignment: center;
+}
+.game-stage-quit-button:hover {
+    -fx-border-color: black;
+    -fx-background-color: #00A6FD;
+    -fx-cursor: hand;
+}
+
+.answer-button {
+    -fx-min-width: 450px;
+    -fx-min-height: 75px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+    -fx-font-size: 24px;
+}
+
+.answer-button:hover {
+    -fx-background-color: lightgray;
+}
 
 .round {
-    -fx-font-size: 28px;
+    -fx-font-size: 56px;
     -fx-alignment: center;
+    -fx-text-fill: orange;
+    -fx-effect: dropshadow(one-pass-box, Black, 25, 0.25, 2, 0);
 }
 
 .player-points-display {
@@ -157,9 +182,9 @@
     -fx-alignment: center;
     -fx-border-color: black;
     -fx-border-style: solid inside;
-    -fx-border-width: 2;
-    -fx-border-insets: 5;
-    -fx-border-radius: 5;
+    -fx-border-width: 1;
+    -fx-border-insets: 10;
+    -fx-border-radius: 10;
     -fx-background-color: lightblue;
     -fx-wrap-text: true;
     -fx-spacing: 10px;
@@ -179,20 +204,11 @@
     -fx-spacing: 10px;
 }
 
-.answer-button {
-    -fx-min-width: 430px;
-    -fx-min-height: 50px;
-    -fx-background-color: rgb(221,221,221);
-    -fx-cursor: hand;
-}
 
-.answer-button:hover {
-    -fx-background-color: lightgray;
-}
 
-/* ============================================ */
-/* RESULT */
-/* ============================================ */
+/* ======================================================================================== */
+/* ====================================== RESULT STAGE ==================================== */
+/* ======================================================================================== */
 
 .result {
     -fx-background-color: #fff;
@@ -212,12 +228,15 @@
 }
 
 .player-name {
-    -fx-font-size: 20px;
+    -fx-font-size: 28px;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
 }
 
 .player-points {
-    -fx-font-size: 12px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
+    -fx-alignment: center;
 }
 
 .correct-container {
@@ -225,25 +244,30 @@
 }
 
 .correct-text {
-    -fx-font-size: 14px;
+    -fx-font-size: 24px;
     -fx-fill: #28a745;
 }
 
-.correct-answer { }
+.correct-answer {
+    -fx-font-size: 18px;
+}
 
 .wrong-container {
     -fx-alignment: center;
 }
 
 .wrong-text {
-    -fx-font-size: 14px;
+    -fx-font-size: 24px;
     -fx-fill: #d43f3a;
 }
 
-.wrong-answer {}
+.wrong-answer {
+    -fx-font-size: 18px;
+}
 
 .winner {
-    -fx-font-size: 14px;
+    -fx-font-size: 36px;
+    -fx-effect: dropshadow(one-pass-box, gold, 5, 0.25, 2, 0);
 }
 
 .back-button {

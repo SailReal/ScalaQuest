@@ -96,10 +96,12 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
       player.get.wrongAnswer(currentQuestion)
     }
     val game = gameState.game.updatePlayer(updatedPlayer).updateState()
-    if (gameState.game.currentRoundNr == gameState.game.maxRoundNr) {
+    if (gameState.game.currentRoundNr == gameState.game.maxRoundNr + 1) {
       gameState = GameState(UpdateAction.SHOW_RESULT, game) // TODO delete
+      println("SHOW_RESULT: " + gameState.game.currentRoundNr)
     } else {
       gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
+      println("SHOW_GAME: " + gameState.game.currentRoundNr)
     }
     //gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
     notifyObservers(gameState)

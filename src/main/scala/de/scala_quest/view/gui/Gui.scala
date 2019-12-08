@@ -58,6 +58,7 @@ class Gui (controller: Controller
       controller.getPlayersCurrentQuestion().get,
       controller.getPlayersCurrentAnswers(),
       _ => controller.onQuit(),
+
       input => controller.processAnswer(input),
     )
   }

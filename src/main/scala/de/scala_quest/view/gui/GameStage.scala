@@ -4,12 +4,13 @@ import javafx.event.{ActionEvent, EventHandler}
 import scalafx.application.JFXApp.PrimaryStage
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, Label}
+import scalafx.scene.control.{Alert, Button, ButtonType, Label}
 import scalafx.scene.effect.DropShadow
 import scalafx.scene.layout.{HBox, VBox}
 import scalafx.scene.paint.Color._
 import scalafx.scene.text.Text
 import scalafx.Includes._
+import scalafx.scene.control.Alert.AlertType
 
 class GameStage(
                 roundNr: Int,
@@ -44,7 +45,7 @@ class GameStage(
           text = playersN
         }
         val playersPoints = new Label {
-          text = "[" + playersP + " pts]"
+          text = "(" + playersP + " pts)"
         }
         children += playersName
         children += playersPoints
@@ -56,7 +57,7 @@ class GameStage(
         spacing = 10
         alignment = Pos.Center
         val questionLabel = new Label {
-          text = question
+          text = "\t" + question + "\t"
           styleClass += "question"
         }
         children += questionLabel
@@ -66,7 +67,7 @@ class GameStage(
           answers.zipWithIndex.foreach { case (ans, i) =>
             val btn = new Button {
               styleClass += "answer-button"
-              text = "" + (i + 1) + ") " + ans
+              text = "_" + (i + 1) + ") " + ans
               onAction = (event: ActionEvent) => processAnswerAction((i + 1))
 
             }
@@ -79,11 +80,26 @@ class GameStage(
 
       // Create quit game button
       val quitButton: Button = new Button {
-        text = "Quit Application"
+        text = "_Quit Application"
+        mnemonicParsing = true
         tooltip = "Click me to exit the application"
-        styleClass += "single-player-button"
-        alignment = Pos.CenterRight
-        onAction = quitGameAction
+        styleClass += "game-stage-quit-button"
+        onAction = quitGameAction /*(event: ActionEvent) => {
+            val ButtonTypeYes = new ButtonType("Yes")
+            val alert = new Alert(AlertType.Confirmation) {
+                title ="Confirmation Dialog"
+                headerText = "Are you sure you want to quit the game?"
+                contentText = "Choose an option"
+                buttonTypes = Seq(ButtonTypeYes, ButtonType.Cancel)
+            }
+            val result = alert.showAndWait()
+
+            result match {
+                case Some(ButtonTypeYes) => quitGameAction
+                case _ => quitGameAction
+            }
+        }*/
+
       }
       children += quitButton
 
