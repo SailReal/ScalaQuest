@@ -2,8 +2,8 @@ package de.scala_quest.controller.defaultImpl
 
 import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.{Controller => ControllerTrait}
-import de.scala_quest.model.{Player => PlayerTrait}
-import de.scala_quest.model.defaultImpl.{Game, Player}
+import de.scala_quest.model.{Game, Player => PlayerTrait}
+import de.scala_quest.model.defaultImpl.Player
 
 import scala.util.Random
 
@@ -11,22 +11,25 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
 
   // TODO remove ALL get's
 
-  override def onQuit(): Unit = {
+  override def onQuit(): Game = {
     gameState = GameState(UpdateAction.CLOSE_APPLICATION, gameState.game)
     notifyObservers(gameState)
+    gameState.game
   }
 
-  override def newGame(): Unit = {
+  override def newGame(): Game = {
     gameState = GameState(UpdateAction.NEW_GAME, gameState.game.createQuestionList)
     notifyObservers(gameState)
+    gameState.game
   }
 
-  override def startGame(): Unit = {
+  override def startGame(): Game = {
     gameState = GameState(UpdateAction.SHOW_GAME, gameState.game.start)
     notifyObservers(gameState)
+    gameState.game
   }
 
-  override def addNewPlayerToGame(name: String): Unit = {
+  override def addNewPlayerToGame(name: String): Game = {
     val questionList = gameState.game.questionList
 
     // shuffle the questionList for each new player
@@ -34,16 +37,18 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
 
     gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.addNewPlayer(newPlayer))
     notifyObservers(gameState)
+    gameState.game
   }
 
   /** Remove a player with the given name from the game.
    *
    * @param name the player's name
    */
-  override def removePlayer(name: String): Unit = {
+  override def removePlayer(name: String): Game = {
     val newPlayer = Player(name, 0, 0, List(), List(), List(), Option.empty)
     gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.removePlayer(newPlayer))
     notifyObservers(gameState)
+    gameState.game
   }
 
   override def getPlayerInfo() : (String, String) = {
@@ -85,7 +90,7 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
    * NB: Only used by the TUI. The GUI will need a different mechanism to process Answers.
    * @param input
    */
-  def processAnswer(input: Int): Unit = {
+  def processAnswer(input: Int): Game = {
     val player = getCurrentPlayer()
     val currentQuestion = player.get.questions.lift(player.get.questionIndex).get
     val correctAnswer = currentQuestion.correctAnswer
@@ -105,6 +110,7 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     }
     //gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
     notifyObservers(gameState)
+    gameState.game
   }
 
   override def getPlayers(): List[PlayerTrait] = gameState.game.players

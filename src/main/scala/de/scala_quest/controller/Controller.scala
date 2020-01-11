@@ -1,30 +1,30 @@
 package de.scala_quest.controller
 
 import de.scala_quest.Observable
-import de.scala_quest.model.{Game, Player, Question}
+import de.scala_quest.model.{Game, Player}
 
 trait Controller extends Observable {
 
   /** Starts a new game. */
-  def newGame()
+  def newGame(): Game
 
   /** Initializes the game. */
-  def startGame()
+  def startGame(): Game
 
   /** Quits the game. */
-  def onQuit()
+  def onQuit(): Game
 
   /** Adds a new player with the given name to the game.
    *
    * @param name the player's name
    */
-  def addNewPlayerToGame(name: String)
+  def addNewPlayerToGame(name: String): Game
 
   /** Remove a player with the given name from the game.
    *
    * @param name the player's name
    */
-  def removePlayer(name: String): Unit
+  def removePlayer(name: String): Game
 
   /** Returns a list containing all player names.
    *
@@ -71,7 +71,7 @@ trait Controller extends Observable {
    *
    * @param input a numerical representation of the keyboard input corresponding to the selected answer
    */
-  def processAnswer(input: Int): Unit
+  def processAnswer(input: Int): Game
 
   def nextPlayerName(): Option[String]
 }
