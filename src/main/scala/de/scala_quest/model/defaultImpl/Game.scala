@@ -52,12 +52,21 @@ case class Game (
     val ans4 = List(Answer(1, "(String, Int, Char)"), Answer(2, "((String, Int), Char)"))
     val question4 = Question(4, "The expression \"Hello\" -> 42 -> 'c' is an instance of", 60, ans4, 2)
 
-    copy(questionList = List(question1, question2, question3, question4))
+    val ans5 = List(Answer(1, "char"), Answer(2, "boolean"), Answer(3, "int"), Answer(4, "All of the above"))
+    val question5 = Question(5, "Which is not a basic scala data type?", 20, ans5, 4)
+
+    val ans6 = List(Answer(1, "5"), Answer(2, "6"))
+    val question6 = Question(6, "5.6.toInt returns?", 10, ans6, 1)
+
+    val ans7 = List(Answer(1, "Char"), Answer(2, "Boolean"), Answer(3, "int"), Answer(4, "Double"))
+    val question7 = Question(7, "Which is not a basic scala data type?", 30, ans7, 3)
+
+    copy(questionList = List(question1, question2, question3, question4, question5, question6, question7))
   }
 
   override def start: Game = {
     val currPlayer = players.lift(0)
-    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 3, currentRoundNr = 1)
+    copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 5, currentRoundNr = 1)
   }
 
   override def nextQuestion(player: PlayerTrait): GameTrait = {
