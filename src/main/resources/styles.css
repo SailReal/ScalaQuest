@@ -1,0 +1,282 @@
+/* @import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,700'); */
+
+.headline {
+    -fx-text-fill: #006464;
+    -fx-background-color: #DFB951;
+    -fx-stroke: yellow;
+    -fx-stroke-width: 1.5;
+    -fx-font-size: 150px;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(one-pass-box, DodgerBlue, 25, 0.25, 2, 0);
+}
+
+/* ============================================ */
+/* MENU */
+/* ============================================ */
+
+.menu {
+    background-color: #FFF;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-spacing: 75px;
+    -fx-alignment: center;
+    -fx-padding: 30;
+}
+
+.main-menu-buttons-container {
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+}
+
+.main-menu-buttons {
+    -fx-cursor: hand;
+    -fx-text-fill: white;
+    -fx-background-color: lightblue;
+    -fx-min-width: 430px;
+    -fx-min-height: 75px;
+    -fx-font-size: 50px;
+    -fx-border-color: #FFF;
+    -fx-border-width: 2;
+}
+.main-menu-buttons:hover {
+    -fx-background-color: #00A6FD;
+    -fx-border-color: black;
+}
+
+.play-button {
+    -fx-text-fill: #fff;
+    -fx-min-width: 430px;
+    -fx-min-height: 60px;
+    -fx-background-color: #259A40;
+    -fx-cursor: hand;
+}
+
+.play-button:hover {
+    -fx-background-color: #1e7e34;
+}
+
+.player-rows-container {
+    -fx-spacing: 10px;
+}
+
+.player-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+.player-textfield {
+    -fx-min-width: 360px;
+    -fx-min-height: 30px;
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color: gray;
+}
+
+.player-textfield-non-editable {
+    -fx-focus-color: rgb(221,221,221);
+    -fx-background-color: rgb(221,221,221);
+}
+
+.help-button {
+    -fx-min-width: 430px;
+    -fx-min-height: 30px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+}
+
+/* ======================================================================================== */
+/* ==================================== ADD PLAYERS STAGE ================================= */
+/* ======================================================================================== */
+
+.player-names-container {
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+.add-player-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+    -fx-padding: 10px;
+}
+
+/* Styling for "Start Quest" and "Quest Game" Container */
+.add-player-stage-buttons-container {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+}
+
+.add-player-button {
+    -fx-background-color: lightgreen;
+}
+
+.add-player-button:hover {
+    -fx-cursor: hand;
+}
+
+/* Styling for "Start Quest" and "Quit Game" buttons */
+.add-player-stage-buttons {
+    -fx-font-size: 30px;
+    -fx-background-color: lightblue;
+    -fx-border-color: white;
+    -fx-tooltip-visible: true;
+}
+
+/* Styling for "Start Quest" and "Quit Game" when hovering buttons */
+.add-player-stage-buttons:hover {
+    -fx-border-color: black;
+    -fx-background-color: #00A6FD;
+    -fx-cursor: hand;
+}
+
+.remove-player-button {
+    -fx-background-color: red;
+    -fx-border-color: black;
+    -fx-font-size: 10px;
+}
+
+.remove-player-button:hover {
+    -fx-cursor: hand;
+}
+
+/* ======================================================================================== */
+/* ======================================= GAME STAGE ===================================== */
+/* ======================================================================================== */
+.game-stage-quit-button {
+    -fx-font-size: 30px;
+    -fx-background-color: lightblue;
+    -fx-border-color: white;
+    -fx-alignment: center;
+}
+.game-stage-quit-button:hover {
+    -fx-border-color: black;
+    -fx-background-color: #00A6FD;
+    -fx-cursor: hand;
+}
+
+.answer-button {
+    -fx-min-width: 450px;
+    -fx-min-height: 75px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+    -fx-font-size: 24px;
+}
+
+.answer-button:hover {
+    -fx-background-color: lightgray;
+}
+
+.round {
+    -fx-font-size: 56px;
+    -fx-alignment: center;
+    -fx-text-fill: orange;
+    -fx-effect: dropshadow(one-pass-box, Black, 25, 0.25, 2, 0);
+}
+
+.player-points-display {
+    -fx-font-size: 24px;
+    -fx-spacing: 10;
+    -fx-padding: 0 0 0 40;
+}
+
+.question {
+    -fx-font-size: 36px;
+    -fx-alignment: center;
+    -fx-border-color: black;
+    -fx-border-style: solid inside;
+    -fx-border-width: 1;
+    -fx-border-insets: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: lightblue;
+    -fx-wrap-text: true;
+    -fx-spacing: 10px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+}
+
+.game {
+    -fx-background-color: #fff;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+}
+
+.answer-container {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+
+
+/* ======================================================================================== */
+/* ====================================== RESULT STAGE ==================================== */
+/* ======================================================================================== */
+
+.result {
+    -fx-background-color: #fff;
+    -fx-font-family: 'Roboto', sans-serif;
+    -fx-alignment: center;
+    -fx-spacing: 50px;
+}
+
+.player-results {
+    -fx-alignment: center;
+    -fx-spacing: 35px;
+}
+
+.player-result {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.player-name {
+    -fx-font-size: 28px;
+    -fx-alignment: center;
+    -fx-font-weight: bold;
+}
+
+.player-points {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+.correct-container {
+    -fx-alignment: center;
+}
+
+.correct-text {
+    -fx-font-size: 24px;
+    -fx-fill: #28a745;
+}
+
+.correct-answer {
+    -fx-font-size: 18px;
+}
+
+.wrong-container {
+    -fx-alignment: center;
+}
+
+.wrong-text {
+    -fx-font-size: 24px;
+    -fx-fill: #d43f3a;
+}
+
+.wrong-answer {
+    -fx-font-size: 18px;
+}
+
+.winner {
+    -fx-font-size: 36px;
+    -fx-effect: dropshadow(one-pass-box, gold, 5, 0.25, 2, 0);
+}
+
+.back-button {
+    -fx-min-width: 430px;
+    -fx-min-height: 50px;
+    -fx-background-color: rgb(221,221,221);
+    -fx-cursor: hand;
+}
+
+.back-button:hover {
+    -fx-background-color: lightgray;
+}

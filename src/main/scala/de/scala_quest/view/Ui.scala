@@ -1,5 +1,7 @@
 package de.scala_quest.view
 
-trait Ui {
+import de.scala_quest.Observer
+
+trait Ui extends Observer {
 
 }

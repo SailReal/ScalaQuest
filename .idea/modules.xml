@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaTest-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaQuest.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaQuest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ScalaQuest-build.iml" filepath="$PROJECT_DIR$/.idea/modules/ScalaQuest-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scala/scala.iml" filepath="$PROJECT_DIR$/scala/scala.iml" />
     </modules>
   </component>
 </project>

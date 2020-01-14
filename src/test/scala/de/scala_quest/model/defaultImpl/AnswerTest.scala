@@ -20,4 +20,10 @@ class AnswerTest extends WordSpec {
       intest.id should equal(id)
     }
   }
+
+  "An Answer" when {
+    "unapplied should have arguments" in {
+      Answer.unapply(intest).get should be((id, text))
+    }
+  }
 }

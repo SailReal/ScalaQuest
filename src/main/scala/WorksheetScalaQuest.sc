@@ -1,9 +1,15 @@
 import de.scala_quest.model.defaultImpl.{Answer, Game, Player, Question}
+import de.scala_quest.model.defaultImpl.Answer
+
+val test: Int = 1
+val a: Int = test + 1
+
 
 val answer = Answer(1, "Foo")
 val question = Question(1, "Foo", 215, List(answer), 1, 21)
 val player = Player("Foo", 23, List(question), List.empty)
-val game = Game(List(player))
+val player2 = Player("Bar", 0, List(question), List.empty)
+val game = Game(List(player, player2))
 
 print("answer")
 answer.id
@@ -27,5 +33,6 @@ player.correctAnswers
 print("game")
 game.players
 
-val tmpPlayer = Player("Bar", 21, List(question), List.empty)
-game.addPlayer(tmpPlayer)
+
+
+val test = "STring"

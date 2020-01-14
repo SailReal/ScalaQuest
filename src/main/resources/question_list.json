@@ -1,0 +1,234 @@
+[
+  {
+    "id": 1,
+    "text": "Every value in scala is an object. True or False?",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "True"
+      },
+      {
+        "id": 2,
+        "text": "False"
+      }
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "id": 2,
+    "text": "Mutable variales start with the keyword",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "const"
+      },
+      {
+        "id": 2,
+        "text": "val"
+      },
+      {
+        "id": 3,
+        "text": "var"
+      }
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "id": 3,
+    "text": "In Scala, the expression '1 to 7' returns a range from",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "1, 2, 3, 4, 5, 6, 7"
+      },
+      {
+        "id": 2,
+        "text": "1, 2, 3, 4, 5, 6"
+      }
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "id": 4,
+    "text": "In Scala, the expression '1 until 7' returns a range from",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "1, 2, 3, 4, 5, 6"
+      },
+      {
+        "id": 2,
+        "text": "1, 2, 3, 4, 5, 6, 7"
+      }
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "id": 5,
+    "text": "5.6.toInt returns?",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "5"
+      },
+      {
+        "id": 2,
+        "text": "6"
+      }
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "id": 6,
+    "text": "Which is not a basic scala data type",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "Char"
+      },
+      {
+        "id": 2,
+        "text": "Boolean"
+      },
+      {
+        "id": 3,
+        "text": "int"
+      },
+      {
+        "id": 4,
+        "text": "Double"
+      }
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "id": 7,
+    "text": "Which is not a basic scala data type",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "char"
+      },
+      {
+        "id": 2,
+        "text": "boolean"
+      },
+      {
+        "id": 3,
+        "text": "int"
+      },
+      {
+        "id": 4,
+        "text": "All of the above"
+      }
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "id": 8,
+    "text": "Which expression returns a correct result",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "\"String\"*3"
+      },
+      {
+        "id": 2,
+        "text": "\"String\"-5"
+      },
+      {
+        "id": 3,
+        "text": "\"String\"+4.5"
+      },
+      {
+        "id": 4,
+        "text": "Option 1 and 3"
+      }
+    ],
+    "correctAnswer": 4
+  },
+  {
+    "id": 9,
+    "text": "Each primitive datatype has a unique set of arithmetic functions like +, * implemented. 'a' + 1 should be",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "a1"
+      },
+      {
+        "id": 2,
+        "text": "b"
+      },
+      {
+        "id": 3,
+        "text": "98"
+      },
+      {
+        "id": 4,
+        "text": "None of the above"
+      }
+    ],
+    "correctAnswer": 3
+  },
+  {
+    "id": 10,
+    "text": "Each primitive datatype has a unique set of arithmetic functions like +, * implemented. 'd' - 'c' should be",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "1"
+      },
+      {
+        "id": 2,
+        "text": "a"
+      },
+      {
+        "id": 3,
+        "text": "None of the above"
+      }
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "id": 11,
+    "text": "(\"Hello\" -> 42).isInstanceOf[(String, Int)] should be",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "False"
+      },
+      {
+        "id": 2,
+        "text": "True"
+      }
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "id": 12,
+    "text": "The expression (\"Hello\" -> 42 -> 'c') is an instance of",
+    "points": 1,
+    "answers": [
+      {
+        "id": 1,
+        "text": "(String, Int, Char)"
+      },
+      {
+        "id": 2,
+        "text": "((String, Int), Char)"
+      }
+    ],
+    "correctAnswer": 2
+  }
+]
