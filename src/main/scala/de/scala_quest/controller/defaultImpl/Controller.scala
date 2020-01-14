@@ -4,7 +4,6 @@ import de.scala_quest.{GameState, UpdateAction}
 import de.scala_quest.controller.{Controller => ControllerTrait}
 import de.scala_quest.model.{Game, Player => PlayerTrait}
 import de.scala_quest.model.defaultImpl.Player
-
 import scala.util.Random
 
 case class Controller(private var gameState: GameState) extends ControllerTrait {
