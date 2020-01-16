@@ -1,7 +1,5 @@
 package de.scala_quest
 
-import scala.concurrent.Future
-
 object UpdateAction extends Enumeration {
     type UpdateAction = Value
     val NEW_GAME, CLOSE_APPLICATION, PLAYER_UPDATE, SHOW_HELP,
