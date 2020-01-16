@@ -1,6 +1,6 @@
 package de.scala_quest.model.defaultImpl
 
-import de.scala_quest.model.{Game => GameTrait, Player => PlayerTrait, Question => QuestionTrait}
+import de.scala_quest.model.{Game => GameTrait, Player => PlayerTrait}
 
 case class Game (
   players: List[PlayerTrait] = List(),

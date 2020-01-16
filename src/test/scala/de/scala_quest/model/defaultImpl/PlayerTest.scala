@@ -9,9 +9,14 @@ import Matchers._
 class PlayerTest extends WordSpec {
 
   final val name = "Foo"
-  final val points = 25
-  final val questionIndex = 3
-  final val questions = List()
+  final val points = 0
+  final val questionIndex = 0
+  val ans1 = List(Answer(1, "True"), Answer(2, "False"))
+  val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1)
+
+  val ans2 = List(Answer(1, "var"), Answer(2, "val"))
+  val question2 = Question(2, "Mutable variables start with the keyword", 10, ans2, 1)
+  final val questions = List(question1, question2)
   final val correctAnswers = List()
   final val wrongAnswers = List()
   final val currentQuestion = None
@@ -20,7 +25,7 @@ class PlayerTest extends WordSpec {
 
   "Player" should  {
     "have a name" in {
-      intest.name should equal(name)
+      intest.name should be(name)
     }
 
     "have points" in {
@@ -50,14 +55,15 @@ class PlayerTest extends WordSpec {
     }
 
     "update the player when providing a correct answer" in {
-      val currentQuestionPoints = 10
+      val currentQuestionPoints = intest.questions(questionIndex).points
+      val currentQuestion = intest.questions(questionIndex)
+      val player1 = intest.correctAnswer(currentQuestion)
 
-      val question = Question(1, "foo", currentQuestionPoints, List(), 2)
-      val game = intest.correctAnswer(question)
-
-      game.points should be(points + currentQuestionPoints)
-      game.correctAnswers should be(List(question))
-      game.wrongAnswers should be(List())
+      player1.points should be(points + currentQuestionPoints)
+      player1.correctAnswers should be(List(currentQuestion))
+      player1.correctAnswers.length should be(1)
+      player1.questionIndex should be(1)
+      player1.wrongAnswers should be(List())
     }
 
     "update the player when providing a wrong answer" in {
@@ -69,6 +75,7 @@ class PlayerTest extends WordSpec {
       game.points should be(points)
       game.correctAnswers should be(List())
       game.wrongAnswers should be(List(question))
+      game.questionIndex should be (1)
     }
 
     "update the player to the next question" in {
@@ -87,6 +94,4 @@ class PlayerTest extends WordSpec {
       Player.apply(name, points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion) should be(intest)
     }
   }
-
-
 }

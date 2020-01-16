@@ -39,10 +39,6 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     gameState.game
   }
 
-  /** Remove a player with the given name from the game.
-   *
-   * @param name the player's name
-   */
   override def removePlayer(name: String): Game = {
     val newPlayer = Player(name, 0, 0, List(), List(), List(), Option.empty)
     gameState = GameState(UpdateAction.PLAYER_UPDATE, gameState.game.removePlayer(newPlayer))
@@ -85,7 +81,7 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     }
   }
 
-  /**
+  /*
    * NB: Only used by the TUI. The GUI will need a different mechanism to process Answers.
    * @param input
    */
@@ -94,6 +90,7 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     val currentQuestion = player.get.questions.lift(player.get.questionIndex).get
     val correctAnswer = currentQuestion.correctAnswer
 
+    printf("input: %d, correctanswer: %d", input, correctAnswer)
     val updatedPlayer = if(input == correctAnswer) {
       player.get.correctAnswer(currentQuestion)
     } else {
@@ -101,11 +98,9 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
     }
     val game = gameState.game.updatePlayer(updatedPlayer).updateState()
     if (gameState.game.currentRoundNr == gameState.game.maxRoundNr + 1) {
-      gameState = GameState(UpdateAction.SHOW_RESULT, game) // TODO delete
-      println("SHOW_RESULT: " + gameState.game.currentRoundNr)
+      gameState = GameState(UpdateAction.SHOW_RESULT, game)
     } else {
-      gameState = GameState(UpdateAction.SHOW_GAME, game) // TODO delete
-      println("SHOW_GAME: " + gameState.game.currentRoundNr)
+      gameState = GameState(UpdateAction.SHOW_GAME, game)
     }
     //gameState = GameState(UpdateAction.DO_NOTHING, game) // changed from show game to do nothing
     notifyObservers(gameState)
@@ -121,5 +116,4 @@ case class Controller(private var gameState: GameState) extends ControllerTrait 
       case _ => None
     }
   }
-
 }
