@@ -11,11 +11,11 @@ case class Game (
   questionList: List[Question] = List(),
 ) extends GameTrait {
 
-  override def addNewPlayer(newPlayer: PlayerTrait): Game = copy(players = players :+ newPlayer)
+  override def addNewPlayer(newPlayer: PlayerTrait): GameTrait = copy(players = players :+ newPlayer)
 
-  override def removePlayer(player: PlayerTrait): Game = copy(players = players.filter(_.name != player.name))
+  override def removePlayer(player: PlayerTrait): GameTrait = copy(players = players.filter(_.name != player.name))
 
-  override def updatePlayer(player: PlayerTrait): Game = {
+  override def updatePlayer(player: PlayerTrait): GameTrait = {
     val updatedPlayers = players.map(play => if(play.name == player.name) {
       player
     } else {
@@ -29,7 +29,7 @@ case class Game (
 
   override def updateRoundNr: GameTrait = copy(currentRoundNr = currentRoundNr + 1)
 
-  override def updateState() : Game = {
+  override def updateState() : GameTrait = {
     val playerIndex = currentPlayerIndex + 1
     if (playerIndex < players.size) {
       copy(currentPlayer = players.lift(playerIndex), currentPlayerIndex = playerIndex)
@@ -38,7 +38,7 @@ case class Game (
     }
   }
 
-  override def createQuestionList: Game = {
+  override def createQuestionList: GameTrait = {
     // TODO: read questions from JSON file
     val ans1 = List(Answer(1, "True"), Answer(2, "False"))
     val question1 = Question(1, "Every value in Scala is an object. True or False?", 10, ans1, 1)
@@ -64,7 +64,7 @@ case class Game (
     copy(questionList = List(question1, question2, question3, question4, question5, question6, question7))
   }
 
-  override def start: Game = {
+  override def start: GameTrait = {
     val currPlayer = players.lift(0)
     copy(currentPlayer = currPlayer, currentPlayerIndex = 0, maxRoundNr = 5, currentRoundNr = 1)
   }

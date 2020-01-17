@@ -46,7 +46,7 @@ class PlayerTest extends WordSpec {
 
     "throw an InvalidParameterException if no name provided" in {
       intercept[InvalidParameterException] {
-        val player = Player("", points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion)
+        Player("", points, questionIndex, questions, correctAnswers, wrongAnswers, currentQuestion)
       }
     }
 
@@ -79,7 +79,7 @@ class PlayerTest extends WordSpec {
     }
 
     "update the player to the next question" in {
-      val player = intest.nextQuestion()
+      intest.currentQuestion should not be(intest.nextQuestion())
     }
   }
 

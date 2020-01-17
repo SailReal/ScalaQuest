@@ -103,11 +103,15 @@ class GameTest extends WordSpec {
 
   "A Game" can {
     "start" in {
-      intest.start
+      val game = intest.start
+      game.currentPlayer should be(Some(player))
+      game.currentPlayerIndex should be(0)
+      game.maxRoundNr should be(5)
+      game.currentRoundNr should be(1)
     }
 
     "can get a next question" in {
-      intest.nextQuestion(player)
+      player.currentQuestion should not be(intest.nextQuestion(player))
     }
   }
 }
